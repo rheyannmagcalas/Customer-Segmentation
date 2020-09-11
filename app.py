@@ -33,8 +33,9 @@ def get_data():
 #     raw_data = pd.read_excel('../C_Online_Retail.xlsx')
 #     clean_data = pd.read_csv('..//H_new_df.csv')
 #     remove_null = pd.read_csv('..//NullCustomer.csv')
-    raw_data = pd.read_excel('https://eskwelabs.s3.amazonaws.com/C_Online_Retail.xlsx')
-    clean_data = pd.read_csv('https://eskwelabs.s3.amazonaws.com/H_new_df.csv')
+    #raw_data = pd.read_excel('https://eskwelabs.s3.amazonaws.com/C_Online_Retail.xlsx')
+    raw_data = pd.read_csv('https://eskwelabs.s3.amazonaws.com/H_new_df.csv')
+    clean_data = raw_data
     return raw_data, clean_data
 
 
