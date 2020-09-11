@@ -15,9 +15,6 @@ from bokeh.palettes import Spectral6, Magma, Inferno
 from bokeh.themes import built_in_themes
 from bokeh.io import curdoc
 
-from pandas_profiling import ProfileReport
-
-
 # In[27]:
 
 
