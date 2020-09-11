@@ -15,6 +15,7 @@ from bokeh.palettes import Spectral6, Magma, Inferno
 from bokeh.themes import built_in_themes
 from bokeh.io import curdoc
 
+
 # In[27]:
 
 
@@ -34,8 +35,7 @@ def get_data():
 #     remove_null = pd.read_csv('..//NullCustomer.csv')
     raw_data = pd.read_excel('https://eskwelabs.s3.amazonaws.com/C_Online_Retail.xlsx')
     clean_data = pd.read_csv('https://eskwelabs.s3.amazonaws.com/H_new_df.csv')
-    remove_null = pd.read_csv('https://eskwelabs.s3.amazonaws.com/NullCustomer.csv')
-    return raw_data, clean_data, remove_null
+    return raw_data, clean_data
 
 
 # In[ ]:
@@ -61,7 +61,7 @@ image = Image.open('eskwelabs.png')
 st.sidebar.image(image, caption='', use_column_width=True)
 st.sidebar.markdown("<h1 style='text-align: center;margin-bottom:50px'>DS Cohort V</h1>", unsafe_allow_html=True)
 
-raw_data, clean_data, remove_null = get_data()
+raw_data, clean_data = get_data()
 
 add_selectbox = st.sidebar.radio(
     "",
@@ -179,8 +179,8 @@ elif add_selectbox == 'Data Cleaning':
     st.bokeh_chart(null_plot)
     
     st.write('Conclusion: We Need To Remove Null Values from CustomerID Column')    
-    clean_column_values = list(remove_null.columns)
-    clean_column_null_count = list(remove_null.count())
+    clean_column_values = list(clean_data.columns)
+    clean_column_null_count = list(clean_data.count())
     
     source1 = ColumnDataSource(data=dict(column_values=clean_column_values, column_null_count=clean_column_null_count, 
                                          color=['#35193e', '#35193e', '#701f57','#701f57', '#ad1759', '#e13342', 
