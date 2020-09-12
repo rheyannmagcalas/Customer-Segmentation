@@ -15,9 +15,10 @@ from bokeh.palettes import Spectral6, Magma, Inferno
 from bokeh.themes import built_in_themes
 from bokeh.io import curdoc
 
-from datetime import timedelta
+from datetime import date, timedelta
 import seaborn as sns
 import matplotlib.pyplot as plt
+from mlxtend.frequent_patterns import apriori, association_rules, fpgrowth
 
 
 # In[27]:
@@ -982,7 +983,231 @@ elif add_selectbox == 'K-Means Clustering and Validation':
     st.write('hello1')
     
 elif add_selectbox == 'Market Basket Analysis':
-    st.write('hello2')
+    st.write('Market Basket Analysis')
+    new_df = clean_data
+    
+    st.write('Define functions and variables')
+    
+    quarter = {
+            'Q1': [date(2011,1,1), date(2011,3,31)],
+            'Q2': [date(2011,4,1), date(2011,6,30)],
+            'Q3': [date(2011,7,1), date(2011,9,30)],
+            'Q4': [date(2011,10,1), date(2011,12,31)],
+            'Q4_2010': [date(2010,10,1), date(2010,12,31)],
+          }
+
+    seasons = {
+                'winter': [date(2010,12,1),date(2011,2,28)],
+                'spring': [date(2011,3,1), date(2011,5,31)],
+                'summer': [date(2011,6,1), date(2011,8,31)],
+                'autumn': [date(2011,9,1), date(2011,11,30)],
+              }
+
+    def set_quarter(invoice_date):
+        if(invoice_date >= quarter['Q1'][0] and invoice_date <= quarter['Q1'][1]):
+            return 'Q1'
+        elif(invoice_date >= quarter['Q2'][0] and invoice_date <= quarter['Q2'][1]):
+            return 'Q2'
+        elif(invoice_date >= quarter['Q3'][0] and invoice_date <= quarter['Q3'][1]):
+            return 'Q3'
+        elif((invoice_date >= quarter['Q4'][0] and invoice_date <= quarter['Q4'][1]) or             (invoice_date >= quarter['Q4_2010'][0] and invoice_date <= quarter['Q4_2010'][1])):
+            return 'Q4'
+
+    def set_season(invoice_date):
+        if(invoice_date >= seasons['spring'][0] and invoice_date <= seasons['spring'][1]):
+            return 'spring'
+        elif(invoice_date >= seasons['summer'][0] and invoice_date <= seasons['summer'][1]):
+            return 'summer'
+        elif(invoice_date >= seasons['autumn'][0] and invoice_date <= seasons['autumn'][1]):
+            return 'autumn'
+        elif(invoice_date >= seasons['winter'][0] and invoice_date <= seasons['winter'][1]):
+            return 'winter'
+        
+    new_df['InvoiceDate'] = pd.to_datetime(new_df.InvoiceDate) # Convert invoicedate to datetime
+    new_df['Region'] = np.where(new_df['Country'].isin(['United Kingdom']), 'UK', 'Others') # Add region column
+    new_df['quarter'] = new_df['InvoiceDate'].map(set_quarter)
+    new_df['season'] = new_df['InvoiceDate'].map(set_season)
+    st.write(new_df.head().astype('object'))
+    st.write('Filtering out 9 extra days from December 2011')
+    new_df = new_df[(new_df['InvoiceDate'] >= '2010-12-1 00:00:00') & (new_df['InvoiceDate'] < '2011-12-1 00:00:00')]
+    st.write(new_df['InvoiceDate'].min(), new_df['InvoiceDate'].max())
+    
+    import re
+
+    pattern = re.compile(r'^.*?BAG.*?$')
+    list_of_matches = [x for x in new_df['Description'] if pattern.match(x)]
+    new_df['description_category'] = np.where(new_df['Description'].isin(list_of_matches), 'BAG', new_df['Description'])
+
+    pattern = re.compile(r'^.*?WRAP.*?$')
+    list_of_matches = [x for x in new_df['Description'] if pattern.match(x)]
+    new_df['description_category'] = np.where(new_df['Description'].isin(list_of_matches), 'WRAP', new_df['description_category'])
+
+    pattern = re.compile(r'^.*?CASES.*?$')
+    list_of_matches = [x for x in new_df['Description'] if pattern.match(x)]
+    new_df['description_category'] = np.where(new_df['Description'].isin(list_of_matches), 'CASES', new_df['description_category'])
+
+    pattern = re.compile(r'^.*?T-LIGHT.*?$')
+    list_of_matches = [x for x in new_df['Description'] if pattern.match(x)]
+    new_df['description_category'] = np.where(new_df['Description'].isin(list_of_matches), 'T-LIGHT', new_df['description_category'])
+
+    pattern = re.compile(r'^.*?BOTTLE.*?$')
+    list_of_matches = [x for x in new_df['Description'] if pattern.match(x)]
+    new_df['description_category'] = np.where(new_df['Description'].isin(list_of_matches), 'BOTTLE', new_df['description_category'])
+
+    pattern = re.compile(r'^.*?BUNTING.*?$')
+    list_of_matches = [x for x in new_df['Description'] if pattern.match(x)]
+    new_df['description_category'] = np.where(new_df['Description'].isin(list_of_matches), 'BUNTING', new_df['description_category'])
+
+    pattern = re.compile(r'^.*?CLOCK.*?$')
+    list_of_matches = [x for x in new_df['Description'] if pattern.match(x)]
+    new_df['description_category'] = np.where(new_df['Description'].isin(list_of_matches), 'CLOCK', new_df['description_category'])
+
+    pattern = re.compile(r'^.*?HAND WARMER.*?$')
+    list_of_matches = [x for x in new_df['Description'] if pattern.match(x)]
+    new_df['description_category'] = np.where(new_df['Description'].isin(list_of_matches), 'HAND WARMER', new_df['description_category'])
+
+    pattern = re.compile(r'^.*?CHALKBOARD.*?$')
+    list_of_matches = [x for x in new_df['Description'] if pattern.match(x)]
+    new_df['description_category'] = np.where(new_df['Description'].isin(list_of_matches), 'CHALKBOARD', new_df['description_category'])
+
+    pattern = re.compile(r'^.*?DOILY.*?$')
+    list_of_matches = [x for x in new_df['Description'] if pattern.match(x)]
+    new_df['description_category'] = np.where(new_df['Description'].isin(list_of_matches), 'DOILY', new_df['description_category'])
+
+    pattern = re.compile(r'^.*?CAKE.*?$')
+    list_of_matches = [x for x in new_df['Description'] if pattern.match(x)]
+    new_df['description_category'] = np.where(new_df['Description'].isin(list_of_matches), 'CAKE', new_df['description_category'])
+
+    pattern = re.compile(r'^.*?JAR.*?$')
+    list_of_matches = [x for x in new_df['Description'] if pattern.match(x)]
+    new_df['description_category'] = np.where(new_df['Description'].isin(list_of_matches), 'JAR', new_df['description_category'])
+
+    pattern = re.compile(r'^.*?ORNAMENT.*?$')
+    list_of_matches = [x for x in new_df['Description'] if pattern.match(x)]
+    new_df['description_category'] = np.where(new_df['Description'].isin(list_of_matches), 'ORNAMENT', new_df['description_category'])
+
+    pattern = re.compile(r'^.*?TISSUE.*?$')
+    list_of_matches = [x for x in new_df['Description'] if pattern.match(x)]
+    new_df['description_category'] = np.where(new_df['Description'].isin(list_of_matches), 'TISSUE', new_df['description_category'])
+
+    pattern = re.compile(r'^.*?SAUCER.*?$')
+    list_of_matches = [x for x in new_df['Description'] if pattern.match(x)]
+    new_df['description_category'] = np.where(new_df['Description'].isin(list_of_matches), 'SAUCER', new_df['description_category'])
+
+    pattern = re.compile(r'^.*?CANDLE.*?$')
+    list_of_matches = [x for x in new_df['Description'] if pattern.match(x)]
+    new_df['description_category'] = np.where(new_df['Description'].isin(list_of_matches), 'CANDLE', new_df['description_category'])
+
+    st.write(new_df.head(5).astype('object'))
+    
+    st.write('No of unique transactions')
+    total_transactions = new_df['InvoiceNo'].nunique()
+    total_transactions
+    
+    st.write('Check for product presence in every transaction/invoice')
+    items = list(new_df['description_category'].unique())
+    grouped = new_df.groupby('InvoiceNo')
+    transaction_level = grouped.aggregate(lambda x: tuple(x)).reset_index()[['InvoiceNo','description_category']]
+    transaction_dict = {item:0 for item in items}
+    output_dict = dict()
+    temp = dict()
+    for rec in transaction_level.to_dict('records'):
+        invoice_num = rec['InvoiceNo']
+        items_list = rec['description_category']
+        transaction_dict = {item:0 for item in items}
+        transaction_dict.update({item:1 for item in items if item in items_list})
+        temp.update({invoice_num:transaction_dict})
+
+    new = [v for k,v in temp.items()]
+    transaction_df = pd.DataFrame(new)
+    
+    transaction_df_T = transaction_df.T
+    transaction_df_T['sum'] = transaction_df_T.sum(axis=1)
+    transaction_df_T = transaction_df_T.sort_values(by=['sum'], ascending=False)
+    transaction_df_T_copy = transaction_df_T.copy()
+    transaction_df_T_20 = transaction_df_T[:10]
+    transaction_df_T_20_no_drop = transaction_df_T_20.copy()
+    transaction_df_T_20 = transaction_df_T_20.drop(['sum'], axis=1)
+    trans = transaction_df_T_20.T
+    transaction_df_T_20_no_drop['share'] = transaction_df_T_20_no_drop['sum']/total_transactions
+    trans = trans.sample(n=500, random_state=42)
+
+    st.write(transaction_df_T_20_no_drop.head().astype('object'))
+    sns.barplot(y = transaction_df_T_20_no_drop.index.values, x = transaction_df_T_20_no_drop['sum'].values, color = 'red')
+    # sns.barplot(y = transaction_df_T_20_no_drop.index.values, x = transaction_df_T_20_no_drop['share'].values, color = 'red')
+    plt.title('Top 10 most bought products')
+    plt.xlabel('Transaction Count')
+    plt.ylabel('Product Name')
+    plt.show()
+    st.pyplot()
+    
+    
+    new_df2 = new_df.copy()
+    new_df2 = new_df2[new_df2['description_category'].isin(['BAG', 'CAKE' 'T-LIGHT', 'BUNTING', 'CANDLE', 'JAR', 'BOTTLE', 'DOILY', 'WRAP', 'CLOCK'])]
+    st.write(new_df2.head().astype('object')) 
+    
+    frequent_itemsets_ap = apriori(trans, min_support=0.01, use_colnames=True)
+    frequent_itemsets_fp = fpgrowth(trans, min_support=0.01, use_colnames=True)
+
+    rules_ap = association_rules(frequent_itemsets_ap, metric="confidence", min_threshold=0.001)
+    rules_fp = association_rules(frequent_itemsets_fp, metric="confidence", min_threshold=0.001)
+    
+    tmp = rules_ap             [['antecedents', 'consequents', 'confidence', 'lift']].sort_values(by = ['lift', 'confidence'], axis = 0, ascending = False)
+    st.write(tmp.head().astype('object'))
+    
+    st.write('Implementing Market Basket Analysis per quarter')
+    
+    df_q4 = new_df[new_df['quarter'] == 'Q4']
+
+    items = list(df_q4['description_category'].unique())
+    grouped = df_q4.groupby('InvoiceNo')
+    transaction_level = grouped.aggregate(lambda x: tuple(x)).reset_index()[['InvoiceNo','description_category']]
+    transaction_dict = {item:0 for item in items}
+    output_dict = dict()
+    temp = dict()
+    for rec in transaction_level.to_dict('records'):
+        invoice_num = rec['InvoiceNo']
+        items_list = rec['description_category']
+        transaction_dict = {item:0 for item in items}
+        transaction_dict.update({item:1 for item in items if item in items_list})
+        temp.update({invoice_num:transaction_dict})
+
+    new = [v for k,v in temp.items()]
+    transaction_df = pd.DataFrame(new)
+
+    transaction_df_T = transaction_df.T
+    transaction_df_T['sum'] = transaction_df_T.sum(axis=1)
+    transaction_df_T = transaction_df_T.sort_values(by=['sum'], ascending=False)
+    transaction_df_T_copy = transaction_df_T.copy()
+    transaction_df_T_20 = transaction_df_T[:10]
+    transaction_df_T_20_no_drop = transaction_df_T_20.copy()
+    transaction_df_T_20 = transaction_df_T_20.drop(['sum'], axis=1)
+    trans = transaction_df_T_20.T
+    transaction_df_T_20_no_drop['share'] = transaction_df_T_20_no_drop['sum']/total_transactions
+    trans = trans.sample(n=500, random_state=42)
+    
+    sns.barplot(y = transaction_df_T_20_no_drop.index.values, x = transaction_df_T_20_no_drop['sum'].values, color = 'red')
+    # sns.barplot(y = transaction_df_T_20_no_drop.index.values, x = transaction_df_T_20_no_drop['share'].values, color = 'red')
+    plt.title('Top 10 most bought products for Q4')
+    plt.xlabel('Transaction Count')
+    plt.ylabel('Product Name')
+    plt.show()
+    
+    st.pyplot()
+    
+    df_q4_2 = df_q4.copy()
+    df_q4_2 = df_q4_2[df_q4_2['description_category'].isin(['BAG', 'CAKE' 'T-LIGHT', 'BUNTING', 'CANDLE', 'JAR', 'BOTTLE', 'DOILY', 'WRAP', 'CLOCK'])]
+    df_q4_2.head()
+    
+    frequent_itemsets_ap = apriori(trans, min_support=0.01, use_colnames=True)
+    frequent_itemsets_fp = fpgrowth(trans, min_support=0.01, use_colnames=True)
+
+    rules_ap = association_rules(frequent_itemsets_ap, metric="confidence", min_threshold=0.001)
+    rules_fp = association_rules(frequent_itemsets_fp, metric="confidence", min_threshold=0.001)
+    
+    tmp = rules_ap             [['antecedents', 'consequents', 'confidence', 'lift']].sort_values(by = ['lift', 'confidence'], axis = 0, ascending = False)
+    # tmp['rule'] = (str(tmp['antecedents']) + ' + ' + str(tmp['consequents']))[4:]
+    tmp
 
 else:
     get_contributors()
