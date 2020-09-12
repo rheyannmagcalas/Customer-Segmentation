@@ -983,7 +983,61 @@ elif add_selectbox == 'RFM Model':
     st.pyplot()
     
 elif add_selectbox == 'K-Means Clustering and Validation':
-    st.write('hello1')
+    import math
+    st.write('K-Means Clustering and Validation')
+    reference_date = max(clean_data['InvoiceDate']) + timedelta(days=1)
+    df_RFM = clean_data.groupby('CustomerID').agg({'InvoiceDate': lambda x: (reference_date - x.max()).days,
+                                       'InvoiceNo': 'count',
+                                       'amount': 'sum'})
+    
+    
+    df_RFM = df_RFM.rename(columns={'InvoiceDate':'Recency',
+                                'InvoiceNo':'Frequency',
+                                'amount':'Monetary'})
+    
+    df_RFM['Recency'] = df_RFM['Recency'].apply(math.log)
+    df_RFM['Frequency'] = df_RFM['Frequency'].apply(math.log)
+    df_RFM['Monetary'] = df_RFM['Monetary'].apply(math.log)
+
+    st.write(df_RFM.head().astype('object'))
+    sns.scatterplot(y=df_RFM['Monetary'], x=df_RFM['Recency'])
+    st.pyplot()
+    
+    sns.scatterplot(y=df_RFM['Monetary'], x=df_RFM['Frequency'])
+    st.pyplot()
+    
+    sns.scatterplot(y=df_RFM['Recency'], x=df_RFM['Frequency'])
+    st.pyplot()
+    
+    st.table(df_RFM[['Recency','Frequency','Monetary']].corr())
+    
+    from mpl_toolkits.mplot3d import Axes3D
+
+    fig = plt.figure(figsize=(15, 10))
+    ax = fig.add_subplot(111, projection='3d')
+
+    r = df_RFM.Recency
+    f = df_RFM.Frequency
+    m = df_RFM.Monetary
+    ax.scatter(r, f, m, s=5)
+
+    ax.set_xlabel('Recency')
+    ax.set_ylabel('Frequency')
+    ax.set_zlabel('Monetary')
+
+    plt.show()
+    
+    st.pyplot()
+    
+    from sklearn import preprocessing
+
+    from sklearn.cluster import KMeans
+    from sklearn.metrics import silhouette_samples, silhouette_score
+
+    feature_vector = ['Recency','Frequency', 'Monetary']
+    X_subset = df_RFM[feature_vector]
+    scaler = preprocessing.StandardScaler().fit(X_subset)
+    X_scaled = scaler.transform(X_subset)
     
 elif add_selectbox == 'Market Basket Analysis':
     st.write('Market Basket Analysis')
