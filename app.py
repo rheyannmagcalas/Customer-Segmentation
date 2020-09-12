@@ -15,6 +15,10 @@ from bokeh.palettes import Spectral6, Magma, Inferno
 from bokeh.themes import built_in_themes
 from bokeh.io import curdoc
 
+from datetime import timedelta
+import seaborn as sns
+import matplotlib.pyplot as plt
+
 
 # In[27]:
 
@@ -579,116 +583,400 @@ elif add_selectbox == 'Exploratory Data Analysis':
     df_africa_top10.legend.visible = False
     st.bokeh_chart(df_africa_top10)
     
-    
-    
-    
-    #st.write(product_categorization.groupby('description_category')['Quantity'].count().sort_values(ascending = False).head(20))
-    #st.table(df_uk.groupby('hour')['InvoiceNo'].nunique())
-    #st.table(df_nonuk.groupby('hour')['InvoiceNo'].nunique())
-    #st.write(clean_data.shape)
-    
-#     clean_data['Hour'] = clean_data['InvoiceDate'].dt.hour
-#     clean_data['Day'] = clean_data['InvoiceDate'].dt.day
-#     clean_data['Week'] = clean_data['InvoiceDate'].dt.weekday
-#     clean_data['Month'] = clean_data['InvoiceDate'].dt.month
-    
-#     df_hour = clean_data.groupby(['InvoiceNo','Hour']).count().reset_index()['Hour']
-#     df_hour_values = df_hour.value_counts().sort_index()
-#     df_hour_values = df_hour_values.reset_index()
 
-    
-#     custom_color = ['#140D35', '#3B0F6F', '#63197F', '#8C2980', '#140D35', '#3B0F6F', '#63197F', '#8C2980', 
-#                    '#140D35', '#3B0F6F', '#63197F', '#8C2980', '#140D35', '#3B0F6F', '#63197F', '#8C2980', 
-#                    '#140D35', '#3B0F6F', '#63197F', '#8C2980', '#140D35', '#3B0F6F', '#63197F', '#8C2980', 
-#                    '#140D35', '#3B0F6F', '#63197F', '#8C2980', '#140D35', '#3B0F6F', '#63197F', '#8C2980', 
-#                    '#140D35', '#3B0F6F', '#63197F', '#8C2980', '#140D35', '#3B0F6F', '#63197F', '#8C2980']
-    
-#     source1 = ColumnDataSource(data=dict(column_values=list(df_hour_values['index']), 
-#                                         column_null_count=list(df_hour_values['Hour']), color=custom_color))
-#     hourly_transaction = figure(x_range=(5,24), plot_height=500, plot_width=600, title='Hourly Transactions')
-    
-#     hourly_transaction.vbar(x='column_values', top='column_null_count', width=0.5,
-#                             legend_field='column_values', color='color', source=source1)
-    
-#     hourly_transaction.xaxis.axis_label = 'Hour'
-#     hourly_transaction.yaxis.axis_label = 'Counts'
-#     hourly_transaction.xaxis.major_label_orientation = 1.2
-#     st.bokeh_chart(hourly_transaction)
-    
-    
-    
-#     day_transaction = clean_data.groupby(['InvoiceNo','Day']).count().reset_index()['Day']
-#     df_day_values = day_transaction.value_counts().sort_index()
-    
-#     source1 = ColumnDataSource(data=dict(column_values=list(df_day_values.index), 
-#                                         column_null_count=list(df_day_values.values)))
-#     day_transaction_plot = figure(x_range=(0,32), plot_height=600, title='Day Transactions')
-    
-#     day_transaction_plot.vbar(x='column_values', top='column_null_count', width=0.5,
-#                             legend_field='column_values',source=source1)
-    
-#     day_transaction_plot.xaxis.axis_label = 'Day'
-#     day_transaction_plot.yaxis.axis_label = 'Counts'
-#     day_transaction_plot.xaxis.major_label_orientation = 1.2
-#     day_transaction_plot.legend.visible = False
-#     st.bokeh_chart(day_transaction_plot)
-    
-    
-#     df_week = clean_data.groupby(['InvoiceNo','Week']).count().reset_index()['Week']
-#     df_week_values = df_week.value_counts().sort_index()
-    
-#     source1 = ColumnDataSource(data=dict(column_values=list(df_week_values.index), 
-#                                         column_null_count=list(df_week_values.values)))
-#     day_transaction_plot = figure(x_range=(-1,8), plot_height=600, title='Weekly Transactions')
-    
-#     day_transaction_plot.vbar(x='column_values', top='column_null_count', width=0.5,
-#                             legend_field='column_values', source=source1)
-    
-#     day_transaction_plot.xaxis.axis_label = 'Day'
-#     day_transaction_plot.yaxis.axis_label = 'Counts'
-#     day_transaction_plot.xaxis.major_label_orientation = 1.2
-#     st.bokeh_chart(day_transaction_plot)
-    
-    
-#     df_month = clean_data.groupby(['InvoiceNo','Month']).count().reset_index()['Month']
-#     df_month_values = df_month.value_counts().sort_index()
-    
-#     source1 = ColumnDataSource(data=dict(column_values=list(df_month_values.index), 
-#                                         column_null_count=list(df_month_values.values), color=custom_color))
-#     day_transaction_plot = figure(x_range=(0,13), plot_height=600, title='Average Monthly Transactions')
-    
-#     day_transaction_plot.vbar(x='column_values', top='column_null_count', width=0.5,
-#                             legend_field='column_values', color='color', source=source1)
-    
-#     day_transaction_plot.xaxis.axis_label = 'Month'
-#     day_transaction_plot.yaxis.axis_label = 'Average Transaction'
-#     day_transaction_plot.xaxis.major_label_orientation = 1.2
-#     st.bokeh_chart(day_transaction_plot)
-    
-#     jan = clean_data[clean_data['Month'] == 1].groupby('Description')['Quantity'].sum().sort_values(ascending = False).head(10)
-#     jan = jan.reset_index()
-    
-    
-#     jan_month = list(jan['Quantity'])
-#     st.write(jan_month[0])
-#     source1 = ColumnDataSource(data=dict(column_values=list(jan['Description']), 
-#                                         column_null_count=list(jan['Quantity'])))
-#     day_transaction_plot = figure(x_range=list(jan['Description']), plot_height=600, title='Most Bought Product for JANUARY')
-    
-#     day_transaction_plot.vbar(x='column_values', top='column_null_count', width=0.5,
-#                             legend_field='column_values', source=source1)
-    
-#     day_transaction_plot.xaxis.axis_label = 'Product'
-#     day_transaction_plot.yaxis.axis_label = 'Average Transaction'
-#     day_transaction_plot.xaxis.major_label_orientation = 1.2
-#     day_transaction_plot.legend.visible = False
-#     st.bokeh_chart(day_transaction_plot)
     
 elif add_selectbox == 'RFM Model':
     st.subheader('RFM Model')
     st.write('\n\n1. Recency: How much time has elapsed since a customer’s last activity or transaction with the brand')
     st.write('2. Frquency: How often has a customer transacted or interacted with the brand during a particular period of time')
     st.write('3. Monetary: How much a customer has spent with the brand during a particular period of time. ')
+    
+    rfm_new_df = clean_data
+    
+    rfm_new_df ['total_price'] = rfm_new_df ['Quantity']*rfm_new_df['UnitPrice']
+    rfm_new_df ['InvoiceDate'] = pd.to_datetime(rfm_new_df['InvoiceDate'])
+    reference_date = max(rfm_new_df['InvoiceDate']) + timedelta(days=1)
+
+    history_df = rfm_new_df.groupby(['CustomerID']).agg({'InvoiceDate':lambda x: (reference_date - x.max()).days, 'InvoiceNo':'count','total_price':'sum'})
+    history_df.columns = ['Recency','Frequency','Monetary']
+    
+    st.write("Maximum Date:"+str(max(rfm_new_df['InvoiceDate'])))
+    st.write("Minimum Date:"+str(min(rfm_new_df['InvoiceDate'])))
+    st.table(history_df.head(10))
+    
+    import math
+    history_df = history_df.agg({'Recency':lambda x : x.apply(math.log),
+               'Frequency':lambda x : x.apply(math.log),
+               'Monetary':lambda x : x.apply(math.log)})
+    
+    
+    plot = figure(plot_height=500, plot_width=800, title='Recency Vs Monetary')
+    source = ColumnDataSource(data=dict(x=history_df['Recency'], y=history_df['Monetary']))
+    plot.scatter('x', 'y', line_color=None, source=source)
+    plot.xaxis.axis_label = 'Recency'
+    plot.yaxis.axis_label = 'Monetary'
+    st.bokeh_chart(plot)
+    
+    
+    plot = figure(plot_height=500, plot_width=800, title='Frequency Vs Monetary')
+    source = ColumnDataSource(data=dict(x=history_df['Frequency'], y=history_df['Monetary']))
+    plot.scatter('x', 'y', line_color=None, source=source)
+    plot.xaxis.axis_label = 'Frequency'
+    plot.yaxis.axis_label = 'Monetary'
+    st.bokeh_chart(plot)
+    
+    plot = figure(plot_height=500, plot_width=800, title='Frequency Vs Recency')
+    source = ColumnDataSource(data=dict(x=history_df['Frequency'], y=history_df['Recency']))
+    plot.scatter('x', 'y', line_color=None, source=source)
+    plot.xaxis.axis_label = 'Frequency'
+    plot.yaxis.axis_label = 'Recency'
+    st.bokeh_chart(plot)
+    
+    from mpl_toolkits.mplot3d import Axes3D
+
+    fig = plt.figure(figsize=(15, 10))
+    ax = fig.add_subplot(111, projection='3d')
+
+    r = history_df.Recency
+    f = history_df.Frequency
+    m = history_df.Monetary
+    ax.scatter(r, f, m, s=5)
+
+    ax.set_xlabel('Recency')
+    ax.set_ylabel('Frequency')
+    ax.set_zlabel('Monetary')
+
+    st.pyplot()
+
+    RFM_final_df = history_df
+    
+    from sklearn import preprocessing
+
+    from sklearn.cluster import KMeans
+    from sklearn.metrics import silhouette_samples, silhouette_score
+
+    feature_vector = ['Recency','Frequency', 'Monetary']
+    X_subset = RFM_final_df[feature_vector]
+    scaler = preprocessing.StandardScaler().fit(X_subset)
+    X_scaled = scaler.transform(X_subset)
+
+
+    from sklearn.cluster import KMeans
+    from sklearn.metrics import davies_bouldin_score,silhouette_score,silhouette_samples
+    from sklearn.preprocessing import StandardScaler
+    import matplotlib.pyplot as plt
+    import matplotlib.cm as cm
+    import warnings
+   
+
+    sse,db,slc = {}, {}, {}
+    for k in range(2, 20):
+        # seed of 10 for reproducibility.
+        kmeans = KMeans(n_clusters=k, max_iter=10,random_state=10).fit(X_scaled)
+        if k == 3: labels = kmeans.labels_
+        clusters = kmeans.labels_
+        sse[k] = kmeans.inertia_ # Inertia: Sum of distances of samples to their closest cluster center
+        db[k] = davies_bouldin_score(X_scaled,clusters)
+        slc[k] = silhouette_score(X_scaled,clusters)
+    
+    p = figure(plot_width=800, plot_height=400, title='SSE Results')
+    p.line(list(sse.keys() ), list(sse.values()), line_width=2)
+    p.xaxis.axis_label = 'Number of Clusters'
+    p.yaxis.axis_label = 'SSE'
+    st.bokeh_chart(p)
+    
+    from kneed import *
+    kl = KneeLocator(range(2,20), list(sse.values()), curve = 'convex', direction = 'decreasing')
+    print("SSE Elbow"+str(kl.elbow))
+    
+    p = figure(plot_width=800, plot_height=400, title='DB Results')
+    p.line(list(db.keys() ), list(db.values()), line_width=2)
+    p.xaxis.axis_label = 'Number of Clusters'
+    p.yaxis.axis_label = 'DB'
+    st.bokeh_chart(p)
+    print("DB Elbow"+str(list(db.keys()) [list(db.values()).index(min(db.values()))]))
+    
+    X = X_scaled
+    for n_clusters in range(2, 20):
+        # Create a subplot with 1 row and 2 columns
+        fig, (ax1, ax2) = plt.subplots(1, 2)
+        fig.set_size_inches(18, 7)
+        # The 1st subplot is the silhouette plot
+        # The silhouette coefficient can range from -1, 1 but in this example all
+        # lie within [-0.1, 1]
+        ax1.set_xlim([-0.1, 1])
+        # The (n_clusters+1)*10 is for inserting blank space between silhouette
+        # plots of individual clusters, to demarcate them clearly.
+        ax1.set_ylim([0, len(X) + (n_clusters + 1) * 10])
+        # Initialize the clusterer with n_clusters value and a random generator
+        # seed of 10 for reproducibility.
+        clusterer = KMeans(n_clusters=n_clusters,max_iter=1000, random_state=10)
+        cluster_labels = clusterer.fit_predict(X)
+        # The silhouette_score gives the average value for all the samples.
+        # This gives a perspective into the density and separation of the formed
+        # clusters
+        silhouette_avg = silhouette_score(X, cluster_labels)
+        st.write("For n_clusters =", n_clusters,
+              "The average silhouette_score is :", silhouette_avg)
+        # Compute the silhouette scores for each sample
+        sample_silhouette_values = silhouette_samples(X, cluster_labels)
+        y_lower = 10
+        for i in range(n_clusters):
+            # Aggregate the silhouette scores for samples belonging to
+            # cluster i, and sort them
+            ith_cluster_silhouette_values =                 sample_silhouette_values[cluster_labels == i]
+            ith_cluster_silhouette_values.sort()
+            size_cluster_i = ith_cluster_silhouette_values.shape[0]
+            y_upper = y_lower + size_cluster_i
+            color = cm.nipy_spectral(float(i) / n_clusters)
+            ax1.fill_betweenx(np.arange(y_lower, y_upper),
+                              0, ith_cluster_silhouette_values,
+                              facecolor=color, edgecolor=color, alpha=0.7)
+            # Label the silhouette plots with their cluster numbers at the middle
+            ax1.text(-0.05, y_lower + 0.5 * size_cluster_i, str(i))
+            # Compute the new y_lower for next plot
+            y_lower = y_upper + 10  # 10 for the 0 samples
+        ax1.set_title("The silhouette plot for the various clusters.")
+        ax1.set_xlabel("The silhouette coefficient values")
+        ax1.set_ylabel("Cluster label")
+        # The vertical line for average silhouette score of all the values
+        ax1.axvline(x=silhouette_avg, color="red", linestyle="--")
+        ax1.set_yticks([])  # Clear the yaxis labels / ticks
+        ax1.set_xticks([-0.1, 0, 0.2, 0.4, 0.6, 0.8, 1])
+        # 2nd Plot showing the actual clusters formed
+        colors = cm.nipy_spectral(cluster_labels.astype(float) / n_clusters)
+        ax2.scatter(X[:, 0], X[:, 1], marker='.', s=30, lw=0, alpha=0.7,
+                    c=colors, edgecolor='k')
+        # Labeling the clusters
+        centers = clusterer.cluster_centers_
+        # Draw white circles at cluster centers
+        ax2.scatter(centers[:, 0], centers[:, 1], marker='o',
+                    c="white", alpha=1, s=200, edgecolor='k')
+        for i, c in enumerate(centers):
+            ax2.scatter(c[0], c[1], marker='$%d$' % i, alpha=1,
+                        s=50, edgecolor='k')
+        ax2.set_title("The visualization of the clustered data.")
+        ax2.set_xlabel("Feature space for the 1st feature")
+        ax2.set_ylabel("Feature space for the 2nd feature")
+        plt.suptitle(("Silhouette analysis for KMeans clustering on sample data "
+                      "with n_clusters = %d" % n_clusters),
+                     fontsize=14, fontweight='bold')
+    #st.bokeh_chart(plt)
+    
+    r = range(7, 0, -1)
+    f = range(1, 8)
+    m = range(1, 8)
+    r_g = pd.qcut(RFM_final_df['Recency'], q=7, labels=r)
+    f_g = pd.qcut(RFM_final_df['Frequency'], q=7, labels=f)
+    m_g = pd.qcut(RFM_final_df['Monetary'], q=7, labels=m)
+    RFM_final_df = RFM_final_df.assign(R = r_g.values, F = f_g.values, M = m_g.values)
+
+    #seperate into 7 quartiles since 7 cllusters
+    RFM_final_df['sum_val'] = RFM_final_df[['R', 'F', 'M']].sum(axis=1)
+    st.write(RFM_final_df.head().astype('object'))
+
+    from sklearn import preprocessing
+    from sklearn.cluster import KMeans
+    from sklearn.metrics import silhouette_samples, silhouette_score
+    feature_vector = ['R','F', 'M','sum_val']
+
+
+    X_subset = RFM_final_df[feature_vector]
+    scaler = preprocessing.StandardScaler().fit(X_subset)
+    X_scaled = scaler.transform(X_subset)
+    labels = KMeans(n_clusters=7, max_iter = 100, random_state=10).fit_predict(X_scaled)
+    RFM_final_df['cluster_no']= labels
+    plt.figure(figsize=(20,15))
+    sns.boxplot(x='cluster_no', y ='sum_val', data = RFM_final_df)
+    st.pyplot()
+    
+    plt.figure(figsize=(20,15))
+    sns.boxplot(x='cluster_no', y ='Monetary', data = RFM_final_df)
+    st.pyplot()
+    
+    plt.figure(figsize=(20,15))
+    sns.boxplot(x='cluster_no', y ='Frequency', data = RFM_final_df)
+    st.pyplot()
+    
+    facet = sns.lmplot(data=RFM_final_df, x='Monetary', y='sum_val', hue='cluster_no', 
+                   fit_reg=False, legend=True, legend_out=True, palette='rocket')
+    
+    st.pyplot()
+    
+    facet = sns.lmplot(data=RFM_final_df, x='Frequency', y='sum_val', hue='cluster_no', 
+                   fit_reg=False, legend=True, legend_out=True, palette='rocket')
+    
+    st.pyplot()
+    
+    facet = sns.lmplot(data=RFM_final_df, x='Recency', y='sum_val', hue='cluster_no', 
+                   fit_reg=False, legend=True, legend_out=True, palette='rocket')
+    st.pyplot()
+    
+    facet = sns.lmplot(data=RFM_final_df, x='Frequency', y='Monetary', hue='cluster_no', 
+                   fit_reg=False, legend=True, legend_out=True, palette='rocket')
+    st.pyplot()
+    
+    facet = sns.lmplot(data=RFM_final_df, x='Monetary', y='Recency', hue='cluster_no', 
+                   fit_reg=False, legend=True, legend_out=True, palette='rocket')
+    
+    st.pyplot()
+    
+    facet = sns.lmplot(data=RFM_final_df, x='Frequency', y='Recency', hue='cluster_no', 
+                   fit_reg=False, legend=True, legend_out=True, palette='rocket')
+    st.pyplot()
+    
+    facet = sns.lmplot(data=RFM_final_df, x='Frequency', y='Monetary', hue='cluster_no', 
+                   fit_reg=False, legend=True, legend_out=True, palette='rocket')
+    st.pyplot()
+    
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    scatter = ax.scatter(RFM_final_df['R'], RFM_final_df['sum_val'], c=RFM_final_df['cluster_no'],s=50)
+    #for i,j in centers:
+    #    ax.scatter(i,j,s=50,c='red',marker='+')
+    ax.set_xlabel('R')
+    ax.set_ylabel('sum_val')
+    plt.colorbar(scatter)
+
+    fig.show()
+    
+    st.pyplot()
+    
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    scatter = ax.scatter(RFM_final_df['F'], RFM_final_df['sum_val'], c=RFM_final_df['cluster_no'],s=50)
+    #for i,j in centers:
+    #    ax.scatter(i,j,s=50,c='red',marker='+')
+    ax.set_xlabel('F')
+    ax.set_ylabel('sum_val')
+    plt.colorbar(scatter)
+
+    fig.show()
+
+    st.pyplot()
+    
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    scatter = ax.scatter(RFM_final_df['M'], RFM_final_df['sum_val'], c=RFM_final_df['cluster_no'],s=50)
+    #for i,j in centers:
+    #    ax.scatter(i,j,s=50,c='red',marker='+')
+    ax.set_xlabel('M')
+    ax.set_ylabel('sum_val')
+    plt.colorbar(scatter)
+
+    fig.show()
+    st.pyplot()
+    
+    st.write(RFM_final_df.head().astype('object'))
+    
+    st.write('Look at the cluster = 4 data and try to infer things')
+    
+    st.table(RFM_final_df.groupby('cluster_no')['Frequency', 'Recency'].describe())
+    st.table(RFM_final_df.groupby('cluster_no')['Monetary', 'sum_val'].describe())
+    st.table(RFM_final_df.groupby('cluster_no')['R', 'F', 'M'].describe())
+    
+    test = RFM_final_df
+
+    test = test.reset_index()
+
+    test = test.groupby('cluster_no')['CustomerID'].nunique().sort_values(ascending=False).reset_index()
+    fig.set_size_inches(10, 16)
+    sns.barplot(data=test,x='cluster_no', y='CustomerID', palette='rocket', orient= True)
+
+    st.pyplot()
+    import squarify
+    import matplotlib
+    cmap = matplotlib.cm.tab20
+    mini = min(test['CustomerID'])
+    maxi = max(test['CustomerID'])
+    norm = matplotlib.colors.Normalize(vmin=mini, vmax=maxi)
+    colors = [cmap(norm(value)) for value in test['CustomerID']]
+    fig = plt.gcf()
+    ax = fig.add_subplot()
+    fig.set_size_inches(12, 8)
+    squarify.plot(sizes = test['CustomerID'],
+                 label = ['Silver',
+                          'Gold',
+                          'Platinum',
+                          'Bronze'], alpha=1, color = colors)
+    
+    st.write(RFM_final_df.max())    
+    st.pyplot()
+    
+    st.write('RFM Max')
+    st.write(RFM_final_df.max())
+    RFM_relationships = RFM_final_df.groupby('cluster_no').mean()
+    st.write('RFM Relationships')
+    st.write(RFM_relationships.max())
+    
+    
+    test = RFM_relationships
+
+    test = test.reset_index()
+    test = test.groupby('cluster_no')['Recency', 'Frequency','Monetary', 'sum_val'].mean().reset_index()
+    fig.set_size_inches(10, 16)
+    sns.barplot(data=test,x='cluster_no', y='sum_val', palette='rocket', orient= True)
+    st.pyplot()
+    
+    test = RFM_relationships
+
+    test = test.reset_index()
+    test = test.groupby('cluster_no')['Recency', 'Frequency','Monetary', 'sum_val'].mean().reset_index()
+    fig.set_size_inches(10, 16)
+    sns.barplot(data=test,x='cluster_no', y='Frequency', palette='rocket', orient= True)
+    st.pyplot()
+    
+    
+    test = RFM_relationships
+
+    test = test.reset_index()
+    test = test.groupby('cluster_no')['Recency', 'Frequency','Monetary', 'sum_val'].mean().reset_index()
+    fig.set_size_inches(10, 16)
+    sns.barplot(data=test,x='cluster_no', y='Monetary', palette='rocket', orient= True)
+    st.pyplot()
+    
+    test = RFM_relationships
+
+    test = test.reset_index()
+    test = test.groupby('cluster_no')['Recency', 'Frequency','Monetary', 'sum_val'].mean().reset_index()
+    fig.set_size_inches(10, 16)
+    sns.barplot(data=test,x='cluster_no', y='Recency', palette='rocket', orient= True)
+    st.pyplot()
+    
+    test = RFM_final_df
+    test = test.reset_index()
+    test['R'] = test['R'].astype(int)
+    test['F'] = test['F'].astype(int)
+    test['M'] = test['M'].astype(int)
+
+    test = test.groupby('cluster_no')['R', 'F','M', 'sum_val'].mean().reset_index()
+    fig.set_size_inches(10, 16)
+    sns.barplot(data=test,x='cluster_no', y='R', palette='rocket', orient= True)
+    st.pyplot()
+    
+    test = RFM_final_df
+
+    test = test.reset_index()
+    test['R'] = test['R'].astype(int)
+    test['F'] = test['F'].astype(int)
+    test['M'] = test['M'].astype(int)
+
+    test = test.groupby('cluster_no')['R', 'F','M', 'sum_val'].mean().reset_index()
+    fig.set_size_inches(10, 16)
+    sns.barplot(data=test,x='cluster_no', y='F', palette='rocket', orient= True)
+    st.pyplot()
+    
+    test = RFM_final_df
+    st.write(RFM_final_df.max())
+    test = test.reset_index()
+    test['R'] = test['R'].astype(int)
+    test['F'] = test['F'].astype(int)
+    test['M'] = test['M'].astype(int)
+
+    test = test.groupby('cluster_no')['R', 'F','M', 'sum_val'].mean().reset_index()
+    fig.set_size_inches(10, 16)
+    sns.barplot(data=test,x='cluster_no', y='M', palette='rocket', orient= True)
+    st.pyplot()
     
 elif add_selectbox == 'K-Means Clustering and Validation':
     st.write('hello1')
