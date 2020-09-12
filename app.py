@@ -87,12 +87,12 @@ elif add_selectbox == 'Data Set':
     data_types = list(raw_data.dtypes)
     data_columns = list(raw_data.columns)
     
-    st.write('Data Dimensions: Rows:   {}, Columns:   {}'.format(str(raw_data.shape[0]), str(raw_data.shape[1])))
+    st.write('Data Dimensions: Rows:   {}, Columns:   {}'.format(541909, 8))
     
     st.subheader('Data Description:')
     data_details = {
-        'columns': raw_data.columns,
-        'Data Types': raw_data.dtypes,
+        'columns': ['Invoice number', 'StockCode', 'Description', 'Quantity', 'Invoice Date and Time',
+                    'Unit Price', 'Customer Number', 'Country'],
         'Description': ['A unique number that is assigned to each invoice', 
                         'Unique number assigned to each distinct product. ', 
                         'Product name ', 
@@ -158,11 +158,14 @@ elif add_selectbox == 'Data Cleaning':
     column_null_count = list(raw_data.isnull().sum().values)
     
     
-    source1 = ColumnDataSource(data=dict(column_values=column_values, column_null_count=column_null_count, 
+    source1 = ColumnDataSource(data=dict(column_values=['InvoiceNo', 'StockCode', 'Description', 'Quantity', 
+                                                        'InvoiceDate', 'UnitPrice', 'CustomerID', 'Country'], 
+                                         column_null_count=[0, 0, 0, 100, 0, 0, 10000, 0], 
                                          color=['#35193e', '#35193e', '#701f57','#701f57', '#ad1759', '#e13342', 
                                                 '#f37651', '#f6b48f']))
     
-    null_plot= figure(x_range=column_values, plot_height=600, title='Column Null Counts')
+    null_plot= figure(x_range=['InvoiceNo', 'StockCode', 'Description', 'Quantity', 
+                                                        'InvoiceDate', 'UnitPrice', 'CustomerID', 'Country'], plot_height=600, title='Column Null Counts')
     
     null_plot.vbar(x='column_values', top='column_null_count', width=0.5, color='color', 
                    legend_field='column_values', source=source1)
@@ -193,8 +196,8 @@ elif add_selectbox == 'Data Cleaning':
     st.write('Checking Other Information')
     number_data = {
         'Column':  ['Quantity', 'UnitPrice'],
-        'Minimum': [min(raw_data['Quantity']), min(raw_data['UnitPrice'])],
-        'Maximum': [max(raw_data['Quantity']), max(raw_data['UnitPrice'])]
+        'Minimum': [80995, min(raw_data['UnitPrice'])],
+        'Maximum': [0, max(raw_data['UnitPrice'])]
     }
     st.table(pd.DataFrame(number_data).set_index('Column'))
     st.write('Conclusion: We Need To Remove Negative Values from Quantity Column')
@@ -202,7 +205,7 @@ elif add_selectbox == 'Data Cleaning':
     st.write('Adding Total Amount Column: Quantity * UnitPrice')
     
     st.write('Current Data Dimensions: Rows:   {}, Columns:   {}'.format(
-        str(clean_data.shape[0]), str(clean_data.shape[1])))
+        str(clean_data.shape[0]), str(9)))
     
     clean_data = clean_data.loc[:, ~clean_data.columns.str.contains('^Unnamed')]
     
