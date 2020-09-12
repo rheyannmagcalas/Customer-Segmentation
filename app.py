@@ -30,26 +30,20 @@ data_load_state = st.text('Loading data...')
 
 @st.cache(allow_output_mutation=True)  
 def get_data():
-#     raw_data = pd.read_excel('../C_Online_Retail.xlsx')
-#     clean_data = pd.read_csv('..//H_new_df.csv')
-#     remove_null = pd.read_csv('..//NullCustomer.csv')
-    #raw_data = pd.read_excel('https://eskwelabs.s3.amazonaws.com/C_Online_Retail.xlsx')
+    product_caregorization = pd.read_csv('https://eskwelabs.s3.amazonaws.com/Categorized(teamjohn).csv')
     raw_data = pd.read_csv('https://eskwelabs.s3.amazonaws.com/H_new_df.csv')
     clean_data = raw_data
-    return raw_data, clean_data
+    return raw_data, clean_data, product_caregorization
 
 
 # In[ ]:
 
 
 def get_contributors():
-    st.write('Contributors')
-    df = pd.DataFrame([['Albert Yumol'], ['Elissa Mae Cabal'],  ['Emerson Chua'],  ['Gabriel Ong'], 
-                       ['Franz Taborlupa'], ['Janina Reyes'], ['Jonas Beltran'], ['John Barrion'], 
-                       ['Joleil Villena'], ['Justine Guino'], ['Kemp Po'], ['Kenrick Nocom'],  ['Paul Allen Chavit'], 
-                       ['Raileen Mae Ferrer'], ['Robert Banadera'], ['Ruth Ann Cabria'], ['William Raymond Revilla']],
-                     columns=['Name'])
-    st.table(df)  
+    st.subheader('Contributors')
+    st.write('-----------------------------')
+    st.markdown("<ul>"                "<li>Albert Yumol</li>"                "<li>Alphonso Balagtas</li>"                "<li>Danilo Gubaton</li>"                "<li>Elissa Mae Cabal</li>"                "<li>Emerson Chua</li>"                "<li>Franz Taborlupa</li>"                "<li>Gabriel Ong</li>"                "<li>Janina Reyes</li>"                "<li>John Barrion</li>"                "<li>Joleil Villena</li>"                "<li>Jonas Beltran</li>"                "<li>Justine Guino</li>"                "<li>Justine Brian Santoalla</li>"                "<li>Kemp Po</li>"                "<li>Kenrick Nocom</li>"                "<li>Paul Allen Chavit</li>"                "<li>Rai Ferrer</li>"                "<li>Rhey Ann Magcalas</li>"                "<li>Roberto Banadera</li>"                "<li>Ruth Ann Cabria</li>"                "<li>William Revilla</li>"                "</ul>", 
+                unsafe_allow_html=True)
 
 
 # In[66]:
@@ -62,7 +56,7 @@ image = Image.open('eskwelabs.png')
 st.sidebar.image(image, caption='', use_column_width=True)
 st.sidebar.markdown("<h1 style='text-align: center;margin-bottom:50px'>DS Cohort V</h1>", unsafe_allow_html=True)
 
-raw_data, clean_data = get_data()
+raw_data, clean_data, product_categorization = get_data()
 
 add_selectbox = st.sidebar.radio(
     "",
@@ -157,12 +151,6 @@ elif add_selectbox == 'Data Cleaning':
     
     column_values = list(get_null_sum.keys())
     column_null_count = list(raw_data.isnull().sum().values)
-    
-    custom_color = ['#140D35', '#3B0F6F', '#63197F', '#8C2980', '#140D35', '#3B0F6F', '#63197F', '#8C2980', 
-                   '#140D35', '#3B0F6F', '#63197F', '#8C2980', '#140D35', '#3B0F6F', '#63197F', '#8C2980', 
-                   '#140D35', '#3B0F6F', '#63197F', '#8C2980', '#140D35', '#3B0F6F', '#63197F', '#8C2980', 
-                   '#140D35', '#3B0F6F', '#63197F', '#8C2980', '#140D35', '#3B0F6F', '#63197F', '#8C2980', 
-                   '#140D35', '#3B0F6F', '#63197F', '#8C2980', '#140D35', '#3B0F6F', '#63197F', '#8C2980']
     
     
     source1 = ColumnDataSource(data=dict(column_values=column_values, column_null_count=column_null_count, 
@@ -368,6 +356,233 @@ elif add_selectbox == 'Exploratory Data Analysis':
     st.write('Conclusion: People buy more stuff from September to December')
     st.write('-----------------------------------------------------------------------')
     
+    product_categorization.loc[product_categorization['Country'] == 'United Kingdom', 'Continent'] = 'Europe'
+    product_categorization.loc[product_categorization['Country'] == 'France', 'Continent'] = 'Europe'
+    product_categorization.loc[product_categorization['Country'] == 'Australia', 'Continent'] = 'Oceania'
+    product_categorization.loc[product_categorization['Country'] == 'Netherlands', 'Continent'] = 'Europe'
+    product_categorization.loc[product_categorization['Country'] == 'Germany', 'Continent'] = 'Europe'
+    product_categorization.loc[product_categorization['Country'] == 'Norway', 'Continent'] = 'Europe'
+    product_categorization.loc[product_categorization['Country'] == 'EIRE', 'Continent'] = 'Europe'
+    product_categorization.loc[product_categorization['Country'] == 'Switzerland', 'Continent'] = 'Europe'
+    product_categorization.loc[product_categorization['Country'] == 'Spain', 'Continent'] = 'Europe'
+    product_categorization.loc[product_categorization['Country'] == 'Poland', 'Continent'] = 'Europe'
+    product_categorization.loc[product_categorization['Country'] == 'Portugal', 'Continent'] = 'Europe'
+    product_categorization.loc[product_categorization['Country'] == 'Italy', 'Continent'] = 'Europe'
+    product_categorization.loc[product_categorization['Country'] == 'Belgium', 'Continent'] = 'Europe'
+    product_categorization.loc[product_categorization['Country'] == 'Lithuania', 'Continent'] = 'Europe'
+    product_categorization.loc[product_categorization['Country'] == 'Japan', 'Continent'] = 'Asia'
+    product_categorization.loc[product_categorization['Country'] == 'Iceland', 'Continent'] = 'Europe'
+    product_categorization.loc[product_categorization['Country'] == 'Channel Islands', 'Continent'] = 'Europe'
+    product_categorization.loc[product_categorization['Country'] == 'Denmark', 'Continent'] = 'Europe'
+    product_categorization.loc[product_categorization['Country'] == 'Cyprus', 'Continent'] = 'Asia'
+    product_categorization.loc[product_categorization['Country'] == 'Sweden', 'Continent'] = 'Europe'
+    product_categorization.loc[product_categorization['Country'] == 'Finland', 'Continent'] = 'Europe'
+    product_categorization.loc[product_categorization['Country'] == 'Austria', 'Continent'] = 'Europe'
+    product_categorization.loc[product_categorization['Country'] == 'Greece', 'Continent'] = 'Europe'
+    product_categorization.loc[product_categorization['Country'] == 'Singapore', 'Continent'] = 'Asia'
+    product_categorization.loc[product_categorization['Country'] == 'Lebanon', 'Continent'] = 'Asia'
+    product_categorization.loc[product_categorization['Country'] == 'United Arab Emirates', 'Continent'] = 'Asia'
+    product_categorization.loc[product_categorization['Country'] == 'Israel', 'Continent'] = 'Asia'
+    product_categorization.loc[product_categorization['Country'] == 'Saudi Arabia', 'Continent'] = 'Asia'
+    product_categorization.loc[product_categorization['Country'] == 'Czech Republic', 'Continent'] = 'Asia'
+    product_categorization.loc[product_categorization['Country'] == 'Canada', 'Continent'] = 'North America'
+    product_categorization.loc[product_categorization['Country'] == 'Unspecified', 'Continent'] = 'Unspecified'
+    product_categorization.loc[product_categorization['Country'] == 'Brazil', 'Continent'] = 'South America'
+    product_categorization.loc[product_categorization['Country'] == 'USA', 'Continent'] = 'North America'
+    product_categorization.loc[product_categorization['Country'] == 'European Community', 'Continent'] = 'Europe'
+    product_categorization.loc[product_categorization['Country'] == 'Bahrain', 'Continent'] = 'Asia'
+    product_categorization.loc[product_categorization['Country'] == 'Malta', 'Continent'] = 'Europe'
+    product_categorization.loc[product_categorization['Country'] == 'RSA', 'Continent'] = 'Africa'
+
+    df_groupby_inv = product_categorization.groupby(['InvoiceNo','Continent']).sum().reset_index()
+    #df_groupby_inv_average = product_categorization.groupby(['InvoiceNo','Continent']).mean().reset_index()
+    
+    st.subheader('Continent')
+    st.write('-----------------------------------------------------------------------')
+    purchase_continent_values = df_groupby_inv.groupby('Continent').sum().reset_index().sort_values(
+        by='Quantity',ascending=False)
+    
+    purchase_continent_source = ColumnDataSource(data=dict(column_values=list(purchase_continent_values['Continent']), 
+                                        column_null_count=list(purchase_continent_values['Quantity']), 
+                                         color=['#35193e', '#701f57', '#ad1759', '#e13342', '#f37651', '#f6b48f']))
+    purchase_continent = figure(x_range=purchase_continent_values['Continent'], plot_height=500, plot_width=600, 
+                                title='Total Quantity Purchase per Continent')
+    
+    purchase_continent.vbar(x='column_values', top='column_null_count', width=0.5,
+                            legend_field='column_values', color='color', source=purchase_continent_source)
+                                            
+    purchase_continent.xaxis.axis_label = 'Continent'
+    purchase_continent.yaxis.axis_label = 'Total Quantity Purchase'
+    purchase_continent.xaxis.major_label_orientation = 1.2
+    st.bokeh_chart(purchase_continent)
+    
+    purchase_continent_values_average = df_groupby_inv.groupby('Continent').mean().reset_index().sort_values(
+        by='Quantity',ascending=False)
+    
+    purchase_continent_average_source = ColumnDataSource(data=dict(column_values=
+                                                                   list(purchase_continent_values_average['Continent']), 
+                                        column_null_count=list(purchase_continent_values_average['amount']), 
+                                         color=['#35193e', '#701f57', '#ad1759', '#e13342', '#f37651', '#f6b48f']))
+    
+    purchase_continent_average = figure(x_range=purchase_continent_values_average['Continent'], plot_height=500, plot_width=600, 
+                                title='Average Quantity per Continent')
+    
+    purchase_continent_average.vbar(x='column_values', top='column_null_count', width=0.5,
+                            legend_field='column_values', color='color', source=purchase_continent_average_source)
+                                            
+    purchase_continent_average.xaxis.axis_label = 'Continent'
+    purchase_continent_average.yaxis.axis_label = 'Total Purchases'
+    purchase_continent_average.xaxis.major_label_orientation = 1.2
+    st.bokeh_chart(purchase_continent_average)
+    
+    purchase_continent_average= df_groupby_inv.groupby('Continent')['amount'].mean().reset_index()
+    
+    purchase_continent_average_amount_source = ColumnDataSource(data=dict(column_values=
+                                                                   list(purchase_continent_values_average['Continent']), 
+                                        column_null_count=list(purchase_continent_values_average['amount']), 
+                                         color=['#35193e', '#701f57', '#ad1759', '#e13342', '#f37651', '#f6b48f']))
+    
+    purchase_continent_average_amount = figure(x_range=purchase_continent_values_average['Continent'], plot_height=500, plot_width=600, 
+                                title='Average Amount of Items per Continent')
+    
+    purchase_continent_average_amount.vbar(x='column_values', top='column_null_count', width=0.5,
+                            legend_field='column_values', color='color', source=purchase_continent_average_amount_source)
+                                            
+    purchase_continent_average_amount.xaxis.axis_label = 'Continent'
+    purchase_continent_average_amount.yaxis.axis_label = 'Amount'
+    purchase_continent_average_amount.xaxis.major_label_orientation = 1.2
+    st.bokeh_chart(purchase_continent_average_amount)
+    
+    
+    
+    df_all_top10_qty = product_categorization.groupby('description_category')['Quantity'].sum().sort_values(ascending = False).head(10)
+
+    
+    top10_product_source = ColumnDataSource(data=dict(column_values=list(df_all_top10_qty.index), 
+                                        column_null_count=list(df_all_top10_qty.values), 
+                                         color=['#35193e', '#701f57', '#ad1759', '#e13342', '#f37651', '#f6b48f']))
+    
+    top10_product = figure(x_range=list(df_all_top10_qty.index), plot_height=500, plot_width=600, 
+                                title='Top 10 Products Categories')
+    
+    top10_product.vbar(x='column_values', top='column_null_count', width=0.5,
+                            legend_field='column_values', color='color', source=top10_product_source)
+                                            
+    top10_product.xaxis.axis_label = 'Product'
+    top10_product.yaxis.axis_label = 'Quantity Purchased'
+    top10_product.xaxis.major_label_orientation = 1.2
+    top10_product.legend.visible = False
+    st.bokeh_chart(top10_product)
+    
+    df_europe_top10_qty = product_categorization[product_categorization['Continent'] == 'Europe'].groupby('description_category')['Quantity'].sum().sort_values(ascending = False).head(10)
+    df_oceania_top10_qty = product_categorization[product_categorization['Continent'] == 'Oceania'].groupby('description_category')['Quantity'].sum().sort_values(ascending = False).head(10)
+    df_asia_top10_qty = product_categorization[product_categorization['Continent'] == 'Asia'].groupby('description_category')['Quantity'].sum().sort_values(ascending = False).head(10)
+    df_northamerica_top10_qty = product_categorization[product_categorization['Continent'] == 'North America'].groupby('description_category')['Quantity'].sum().sort_values(ascending = False).head(10)
+    df_southamerica_top10_qty = product_categorization[product_categorization['Continent'] == 'South America'].groupby('description_category')['Quantity'].sum().sort_values(ascending = False).head(10)
+    df_africa_top10_qty = product_categorization[product_categorization['Continent'] == 'Africa'].groupby('description_category')['Quantity'].sum().sort_values(ascending = False).head(10)
+
+    
+    df_europe_top10_qty_source = ColumnDataSource(data=dict(column_values=list(df_europe_top10_qty.index), 
+                                        column_null_count=list(df_europe_top10_qty.values), 
+                                         color=['#35193e', '#701f57', '#ad1759', '#e13342', '#f37651', '#f6b48f']))
+    
+    df_europe_top10 = figure(x_range=list(df_all_top10_qty.index), plot_height=500, plot_width=600, 
+                                title='Top 10 Product Categories in Europe (QTY)')
+    
+    df_europe_top10.vbar(x='column_values', top='column_null_count', width=0.5,
+                            legend_field='column_values', color='color', source=df_europe_top10_qty_source)
+                                            
+    df_europe_top10.xaxis.axis_label = 'Product'
+    df_europe_top10.yaxis.axis_label = 'Quantity Purchased'
+    df_europe_top10.xaxis.major_label_orientation = 1.2
+    df_europe_top10.legend.visible = False
+    st.bokeh_chart(df_europe_top10)
+    
+    df_asia_top10_qty_source = ColumnDataSource(data=dict(column_values=list(df_oceania_top10_qty.index), 
+                                        column_null_count=list(df_oceania_top10_qty.values), 
+                                         color=['#35193e', '#701f57', '#ad1759', '#e13342', '#f37651', '#f6b48f']))
+    
+    df_oceania_top10 = figure(x_range=list(df_oceania_top10_qty.index), plot_height=500, plot_width=600, 
+                                title='Top 10 Product Categories in Oceania (QTY)')
+    
+    df_oceania_top10.vbar(x='column_values', top='column_null_count', width=0.5,
+                            legend_field='column_values', color='color', source=df_asia_top10_qty_source )
+                                            
+    df_oceania_top10.xaxis.axis_label = 'Product'
+    df_oceania_top10.yaxis.axis_label = 'Quantity Purchased'
+    df_oceania_top10.xaxis.major_label_orientation = 1.2
+    df_oceania_top10.legend.visible = False
+    st.bokeh_chart(df_oceania_top10)
+    
+    df_asia_top10_qty_source = ColumnDataSource(data=dict(column_values=list(df_asia_top10_qty.index), 
+                                        column_null_count=list(df_asia_top10_qty.values), 
+                                         color=['#35193e', '#701f57', '#ad1759', '#e13342', '#f37651', '#f6b48f']))
+    
+    df_asia_top10 = figure(x_range=list(df_oceania_top10_qty.index), plot_height=500, plot_width=600, 
+                                title='Top 10 Product Categories in Asia (QTY)')
+    
+    df_asia_top10.vbar(x='column_values', top='column_null_count', width=0.5,
+                            legend_field='column_values', color='color', source=df_asia_top10_qty_source)
+                                            
+    df_asia_top10.xaxis.axis_label = 'Product'
+    df_asia_top10.yaxis.axis_label = 'Quantity Purchased'
+    df_asia_top10.xaxis.major_label_orientation = 1.2
+    df_asia_top10.legend.visible = False
+    st.bokeh_chart(df_asia_top10)
+    
+    df_northamerica_top10_qty_source = ColumnDataSource(data=dict(column_values=list(df_northamerica_top10_qty.index), 
+                                        column_null_count=list(df_northamerica_top10_qty.values), 
+                                         color=['#35193e', '#701f57', '#ad1759', '#e13342', '#f37651', '#f6b48f']))
+    
+    df_northamerica_top10 = figure(x_range=list(df_northamerica_top10_qty.index), plot_height=500, plot_width=600, 
+                                title='Top 10 Product Categories in North America (QTY)')
+    
+    df_northamerica_top10.vbar(x='column_values', top='column_null_count', width=0.5,
+                            legend_field='column_values', color='color', source=df_northamerica_top10_qty_source)
+                                            
+    df_northamerica_top10.xaxis.axis_label = 'Product'
+    df_northamerica_top10.yaxis.axis_label = 'Quantity Purchased'
+    df_northamerica_top10.xaxis.major_label_orientation = 1.2
+    df_northamerica_top10.legend.visible = False
+    st.bokeh_chart(df_northamerica_top10)
+    
+    
+    df_southamerica_top10_qty_source = ColumnDataSource(data=dict(column_values=list(df_southamerica_top10_qty.index), 
+                                        column_null_count=list(df_southamerica_top10_qty.values), 
+                                         color=['#35193e', '#701f57', '#ad1759', '#e13342', '#f37651', '#f6b48f']))
+    
+    df_southamerica_top10 = figure(x_range=list(df_southamerica_top10_qty.index), plot_height=500, plot_width=600, 
+                                title='Top 10 Product Categories in South America (QTY)')
+    
+    df_southamerica_top10.vbar(x='column_values', top='column_null_count', width=0.5,
+                            legend_field='column_values', color='color', source=df_southamerica_top10_qty_source)
+                                            
+    df_southamerica_top10.xaxis.axis_label = 'Product'
+    df_southamerica_top10.yaxis.axis_label = 'Quantity Purchased'
+    df_southamerica_top10.xaxis.major_label_orientation = 1.2
+    df_southamerica_top10.legend.visible = False
+    st.bokeh_chart(df_northamerica_top10)
+    
+    df_africa_top10_qty_source = ColumnDataSource(data=dict(column_values=list(df_africa_top10_qty.index), 
+                                        column_null_count=list(df_africa_top10_qty.values), 
+                                         color=['#35193e', '#701f57', '#ad1759', '#e13342', '#f37651', '#f6b48f']))
+    
+    df_africa_top10 = figure(x_range=list(df_africa_top10_qty.index), plot_height=500, plot_width=600, 
+                                title='Top 10 Product Categories in Africa (QTY)')
+    
+    df_africa_top10.vbar(x='column_values', top='column_null_count', width=0.5,
+                            legend_field='column_values', color='color', source=df_africa_top10_qty_source)
+                                            
+    df_africa_top10.xaxis.axis_label = 'Product'
+    df_africa_top10.yaxis.axis_label = 'Quantity Purchased'
+    df_africa_top10.xaxis.major_label_orientation = 1.2
+    df_africa_top10.legend.visible = False
+    st.bokeh_chart(df_africa_top10)
+    
+    
+    
+    
+    #st.write(product_categorization.groupby('description_category')['Quantity'].count().sort_values(ascending = False).head(20))
     #st.table(df_uk.groupby('hour')['InvoiceNo'].nunique())
     #st.table(df_nonuk.groupby('hour')['InvoiceNo'].nunique())
     #st.write(clean_data.shape)
