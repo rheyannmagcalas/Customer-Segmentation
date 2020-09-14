@@ -27,16 +27,6 @@ from PIL import Image
 st.title('Customer Segmentation')
 
 
-# In[6]:
-
-
-def get_contributors():
-    st.subheader('Contributors')
-    st.write('-----------------------------')
-    st.markdown("<ul>"                "<li>Albert Yumol</li>"                "<li>Alphonso Balagtas</li>"                "<li>Danilo Gubaton</li>"                "<li>Elissa Mae Cabal</li>"                "<li>Emerson Chua</li>"                "<li>Franz Taborlupa</li>"                "<li>Gabriel Ong</li>"                "<li>Janina Reyes</li>"                "<li>John Barrion</li>"                "<li>Joleil Villena</li>"                "<li>Jonas Beltran</li>"                "<li>Justine Guino</li>"                "<li>Justine Brian Santoalla</li>"                "<li>Kemp Po</li>"                "<li>Kenrick Nocom</li>"                "<li>Paul Allen Chavit</li>"                "<li>Rai Ferrer</li>"                "<li>Rhey Ann Magcalas</li>"                "<li>Roberto Banadera</li>"                "<li>Ruth Ann Cabria</li>"                "<li>William Revilla</li>"                "</ul>", 
-                unsafe_allow_html=True)
-
-
 # In[ ]:
 
 
@@ -49,7 +39,8 @@ st.sidebar.markdown("<h1 style='text-align: center;margin-bottom:50px'>DS Cohort
 add_selectbox = st.sidebar.radio(
     "",
     ("Introduction and Problem Statement", "Data Set", "Outline", "List of Tools", "Data Cleaning", 
-     "Exploratory Data Analysis", "RFM Model", "K-Means Clustering and Validation", "Market Basket Analysis", "Contributors")
+     "Exploratory Data Analysis", "RFM Model", "K-Means Clustering and Validation", "Market Basket Analysis", 
+     "Recommendations", "Contributors", "References")
 )
 
 
@@ -598,4 +589,90 @@ elif add_selectbox == 'Exploratory Data Analysis':
     
     st.write('Bag is the clear winner for Africa.')
     st.write('The other items that make up the Top 10 list in South America are almost all equally tied.')
+
+
+# In[ ]:
+
+
+elif add_selectbox == 'RFM Model':
+    st.subheader('RFM Model')
+    st.write('-----------------------------------------------------------------------')
+    st.write('\n\n1. Recency: How much time has elapsed since a customer’s last activity or transaction with the brand')
+    st.write('2. Frquency: How often has a customer transacted or interacted with the brand during a particular period of time')
+    st.write('3. Monetary: How much a customer has spent with the brand during a particular period of time.')
+
+
+# In[ ]:
+
+
+elif add_selectbox == "K-Means Clustering and Validation":
+    st.write('K-Means Clustering and Validation')
+    
+    
+
+
+# In[ ]:
+
+
+elif add_selectbox == "Market Basket Analysis":
+    st.subheader('Market Basket Analysis')
+    st.write('-----------------------------')
+    st.markdown('<b>Goal of Market Basket Analysis</b>', unsafe_allow_html=True)
+    st.write('Market basket analysis allows retailers to understand their customer purchasing behaviors to serve them well '             'with their purchases.')
+    st.write('To illustrate, for a given itemset, there is an antecedent and a consequent:')
+    st.write('A certain customer may purchase a sandwich and some cookies (antecedent) and would have a higher chance of '             'purchasing iced tea (consequent)')
+    st.markdown('<b>Support</b>: How popular an item is, a higher support would also mean a higher chance that the '                'antecedent (Item X) will occur', unsafe_allow_html=True)
+    st.markdown('<b>Confidence</b>: This says how likely the consequent (item Y) is purchased when antecedent(Item X) is '                'purchased', unsafe_allow_html=True)
+    st.markdown('<b>Lift</b>: Likelihood of a customer buying both item X and item Y together', unsafe_allow_html=True)
+    
+    st.subheader('Categorizing Sales by Quarter')
+    
+    quarterly_sales_source = ColumnDataSource(data=dict(column_values=['Q1', 'Q2', 'Q3', 'Q4'], 
+                                        column_null_count=[3288, 4075, 4331, 5945], 
+                                         color=['#35193e', '#701f57', '#ad1759', '#e13342', '#f37651', '#f6b48f']))
+    
+    quarterly_sales = figure(x_range=['Q1', 'Q2', 'Q3', 'Q4'], plot_height=500, plot_width=600, 
+                                title='Top 10 Products Categories')
+    
+    quarterly_sales.vbar(x='column_values', top='column_null_count', width=0.5,
+                            legend_field='column_values', color='color', source=quarterly_sales_source)
+                                            
+    quarterly_sales.xaxis.axis_label = 'Quarter'
+    quarterly_sales.yaxis.axis_label = 'Total # of Orders'
+    quarterly_sales.xaxis.major_label_orientation = 1.2
+    quarterly_sales.legend.visible = False
+    st.bokeh_chart(quarterly_sales)
+    
+    
+    
+
+
+# In[ ]:
+
+
+elif add_selectbox == "Recommendations":
+    st.subheader('Recommendations')
+    st.write('-----------------------------')
+    st.subheader('Customer Segmentation')
+    st.write('-----------------------------')
+    st.write(' 1. Focus more on engaging customers from the platinum segment - cluster with the a low number of customers but highest RFM values')
+    st.write(' 2. Figure out how to upgrade customer segments from gold and silver')
+    st.write(' 3. Less focus on upgrading customers from the bronze segment as it would require more resources')
+    
+    
+    st.subheader('Market Basket Analysis')
+    st.write('-----------------------------')
+    st.write(' 1. Bundle popular items together to ease purchase decisions and to increase spend per invoice')
+    st.write(' 2. Identify seasonal bundles to keep interest up for every season (Note: Data on other years is needed to identify seasonality)')
+    st.write(' 3. Further MBA based on location to create bundles specific to each continent or country')
+
+
+# In[ ]:
+
+
+elif add_selectbox == 'Contributors':
+    st.subheader('Contributors')
+    st.write('-----------------------------')
+    st.markdown("<ul>"                "<li>Albert Yumol</li>"                "<li>Alphonso Balagtas</li>"                "<li>Danilo Gubaton</li>"                "<li>Elissa Mae Cabal</li>"                "<li>Emerson Chua</li>"                "<li>Franz Taborlupa</li>"                "<li>Gabriel Ong</li>"                "<li>Janina Reyes</li>"                "<li>John Barrion</li>"                "<li>Joleil Villena</li>"                "<li>Jonas Beltran</li>"                "<li>Justine Guino</li>"                "<li>Justine Brian Santoalla</li>"                "<li>Kemp Po</li>"                "<li>Kenrick Nocom</li>"                "<li>Paul Allen Chavit</li>"                "<li>Rai Ferrer</li>"                "<li>Rhey Ann Magcalas</li>"                "<li>Roberto Banadera</li>"                "<li>Ruth Ann Cabria</li>"                "<li>William Revilla</li>"                "</ul>", 
+                unsafe_allow_html=True)
 
