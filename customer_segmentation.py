@@ -740,18 +740,60 @@ elif add_selectbox == 'RFM Model':
     fig.show()
     st.pyplot()
     
+    st.subheader('4 Cluster test for graphs')
     RFM_final_df = history_df
     r = range(4, 0, -1)
-    f = range(1, 3)
-    m = range(1, 3)
+    f = range(1, 5)
+    m = range(1, 5)
     r_g = pd.qcut(RFM_final_df['Recency'], q=4, labels=r)
     f_g = pd.qcut(RFM_final_df['Frequency'], q=4, labels=f)
     m_g = pd.qcut(RFM_final_df['Monetary'], q=4, labels=m)
     RFM_final_df = RFM_final_df.assign(R = r_g.values, F = f_g.values, M = m_g.values)
     RFM_final_df['sum_val'] = RFM_final_df[['R', 'F', 'M']].sum(axis=1)
+    feature_vector = ['R','F', 'M','sum_val']
+    X_subset = RFM_final_df[feature_vector]
+    scaler = preprocessing.StandardScaler().fit(X_subset)
+    X_scaled = scaler.transform(X_subset)
+    labels = KMeans(n_clusters=4, max_iter = 100, random_state=10).fit_predict(X_scaled)
+    RFM_final_df['cluster_no']= labels
     sns.set(style="whitegrid", font_scale=1.5)
+    plt.figure(figsize=(20,10))
+    sns.boxplot(x='cluster_no', y ='sum_val', data = RFM_final_df)
+    st.pyplot()
+
+    fig = plt.figure(figsize=(15,4))
+    ax = fig.add_subplot(111)
+    scatter = ax.scatter(RFM_final_df['Monetary'], RFM_final_df['sum_val'], c=RFM_final_df['cluster_no'],s=50)
+    ax.set_xlabel('Monetary')
+    ax.set_ylabel('sum_val')
+    plt.colorbar(scatter)
+    fig.show()
+    st.pyplot()
     
-    st.subheader('4 Cluster test for graphs')
+    fig = plt.figure(figsize=(15,4))
+    ax = fig.add_subplot(111)
+    scatter = ax.scatter(RFM_final_df['Frequency'], RFM_final_df['Monetary'], c=RFM_final_df['cluster_no'],s=50)
+    ax.set_xlabel('Frequency')
+    ax.set_ylabel('Monetary')
+    plt.colorbar(scatter)
+    st.pyplot()
+    
+    fig = plt.figure(figsize=(15,4))
+    ax = fig.add_subplot(111)
+    scatter = ax.scatter(RFM_final_df['Recency'], RFM_final_df['sum_val'], c=RFM_final_df['cluster_no'],s=50)
+    ax.set_xlabel('Frequency')
+    ax.set_ylabel('sum_val')
+    plt.colorbar(scatter)
+    st.pyplot()
+    
+    fig = plt.figure(figsize=(15,4))
+    ax = fig.add_subplot(111)
+    scatter = ax.scatter(RFM_final_df['Monetary'], RFM_final_df['Recency'], c=RFM_final_df['cluster_no'],s=50)
+    ax.set_xlabel('Monetary')
+    ax.set_ylabel('Recency')
+    plt.colorbar(scatter)
+    fig.show()
+    st.pyplot()    
 
 
 # In[ ]:
