@@ -602,8 +602,156 @@ elif add_selectbox == 'RFM Model':
     st.subheader('RFM Model')
     st.write('-----------------------------------------------------------------------')
     st.write('\n\n1. Recency: How much time has elapsed since a customer’s last activity or transaction with the brand')
-    st.write('2. Frquency: How often has a customer transacted or interacted with the brand during a particular period of time')
+    st.write('2. Frequency: How often has a customer transacted or interacted with the brand during a particular period of time')
     st.write('3. Monetary: How much a customer has spent with the brand during a particular period of time.')
+    
+    original_history_df = pd.read_csv('rfm.csv')
+    from matplotlib import pyplot as plt
+    import math
+    import seaborn as sns
+    
+    history_df = original_history_df.agg({'Recency':lambda x : x.apply(math.log),
+                   'Frequency':lambda x : x.apply(math.log),
+                   'Monetary':lambda x : x.apply(math.log)})
+
+    st.write('Recency')
+    sns.set_style('ticks')
+    sns.distplot(original_history_df['Recency'])
+    st.pyplot()
+    
+    st.write('Recency Log')
+    sns.set_style('ticks')
+    sns.distplot(history_df['Recency'])
+    st.pyplot()
+    
+    st.write('Frequency')
+    sns.set_style('ticks')
+    sns.distplot(original_history_df['Recency'])
+    st.pyplot()
+    
+    st.write('Frequency Log')
+    sns.set_style('ticks')
+    sns.distplot(history_df['Frequency'])
+    st.pyplot()
+    
+    st.write('Monetary')
+    sns.set_style('ticks')
+    sns.distplot(original_history_df['Monetary'])
+    st.pyplot()
+    
+    st.write('Monetary Log')
+    sns.set_style('ticks')
+    sns.distplot(history_df['Monetary'])
+    st.pyplot()
+    
+    st.subheader('Initial KMeans Validation')
+    
+    st.write('Elbow method')
+    p = figure(plot_width=600, plot_height=300)
+    p.line([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], 
+           [6881.968530629305,5313.478199667941,4443.874408180387,3768.1695746453115,3373.7522363125245,
+            3059.781169027937,2813.043183722383,2640.4207898996333,2480.861787245848,2315.6257820620967,
+            2165.7180506392915,2037.9850112053998,1961.0375346160306,1892.507829213857,1823.9033825466,
+            1755.628369326791,1699.6836724215682, 1637.0241109836584], line_width=2)
+
+    st.bokeh_chart(p)
+    st.write('Value: 7')
+    
+    st.write('Davies Bouldin')
+    p.line([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], 
+           [0.9487871227072343, 1.0994013102265348, 1.0539596080493157,1.0825087608906983,
+            1.0634693512054187,1.0243617485613736,1.0737975384660532,1.0911448720565988, 
+            1.1239221282510097,1.0724430343296243,1.0152932521279805,1.0286471298945319,
+            1.0378229576406857,1.0467917387011825,1.0780499696250303,1.0848179104125923,
+            1.0608955745993278,1.0473244594348894], line_width=2)
+    st.bokeh_chart(p)
+    st.write('Value: 2')
+    
+    st.write('Silhouette')
+    p.line([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], 
+           [0.3952253031244901,0.3030910282451309,0.30093252597153836, 0.2783079122549255,0.2757724065620004,
+            0.26575330769962024,0.2563822957123878,0.25911053418986607,0.25045809375279976,0.26394868149738443,
+            0.26090779947360165,0.2607131271231685,0.25272746319674855,0.25323389924060236,0.24822965773625016,
+            0.24114697857307588,0.24238949629816922,0.243505657043619], line_width=2)
+    st.bokeh_chart(p)
+    st.write('Value: 2')
+    
+    st.subheader('Since we got k = 7 from our K-means analysis, we decided to look at our boxplots of RFM values')
+    
+    RFM_final_df = history_df
+    r = range(7, 0, -1)
+    f = range(1, 8)
+    m = range(1, 8)
+    r_g = pd.qcut(RFM_final_df['Recency'], q=7, labels=r)
+    f_g = pd.qcut(RFM_final_df['Frequency'], q=7, labels=f)
+    m_g = pd.qcut(RFM_final_df['Monetary'], q=7, labels=m)
+    RFM_final_df = RFM_final_df.assign(R = r_g.values, F = f_g.values, M = m_g.values)
+    RFM_final_df['sum_val'] = RFM_final_df[['R', 'F', 'M']].sum(axis=1)
+    sns.set(style="whitegrid", font_scale=1.5)
+    
+    from sklearn import preprocessing
+    from sklearn.cluster import KMeans
+    from sklearn.metrics import silhouette_samples, silhouette_score
+    feature_vector = ['R','F', 'M','sum_val']
+
+
+    X_subset = RFM_final_df[feature_vector]
+    scaler = preprocessing.StandardScaler().fit(X_subset)
+    X_scaled = scaler.transform(X_subset)
+    labels = KMeans(n_clusters=7, max_iter = 100, random_state=10).fit_predict(X_scaled)
+    RFM_final_df['cluster_no']= labels
+    st.write('RFM Sum per cluster')
+    plt.figure(figsize=(20,10))
+    sns.boxplot(x='cluster_no', y ='sum_val', data = RFM_final_df)
+    st.pyplot()
+    
+    st.subheader('7 Cluster test for graphs')
+    fig = plt.figure(figsize=(15,4))
+    ax = fig.add_subplot(111)
+    scatter = ax.scatter(RFM_final_df['Monetary'], RFM_final_df['sum_val'], c=RFM_final_df['cluster_no'],s=50)
+    ax.set_xlabel('Monetary')
+    ax.set_ylabel('sum_val')
+    plt.colorbar(scatter)
+    fig.show()
+    st.pyplot()
+    
+    fig = plt.figure(figsize=(15,4))
+    ax = fig.add_subplot(111)
+    scatter = ax.scatter(RFM_final_df['Frequency'], RFM_final_df['Monetary'], c=RFM_final_df['cluster_no'],s=50)
+    ax.set_xlabel('Frequency')
+    ax.set_ylabel('Monetary')
+    plt.colorbar(scatter)
+    st.pyplot()
+    
+    fig = plt.figure(figsize=(15,4))
+    ax = fig.add_subplot(111)
+    scatter = ax.scatter(RFM_final_df['Recency'], RFM_final_df['sum_val'], c=RFM_final_df['cluster_no'],s=50)
+    ax.set_xlabel('Frequency')
+    ax.set_ylabel('sum_val')
+    plt.colorbar(scatter)
+    st.pyplot()
+    
+    fig = plt.figure(figsize=(15,4))
+    ax = fig.add_subplot(111)
+    scatter = ax.scatter(RFM_final_df['Monetary'], RFM_final_df['Recency'], c=RFM_final_df['cluster_no'],s=50)
+    ax.set_xlabel('Monetary')
+    ax.set_ylabel('Recency')
+    plt.colorbar(scatter)
+    fig.show()
+    st.pyplot()
+    
+    RFM_final_df = history_df
+    r = range(4, 0, -1)
+    f = range(1, 3)
+    m = range(1, 3)
+    r_g = pd.qcut(RFM_final_df['Recency'], q=4, labels=r)
+    f_g = pd.qcut(RFM_final_df['Frequency'], q=4, labels=f)
+    m_g = pd.qcut(RFM_final_df['Monetary'], q=4, labels=m)
+    RFM_final_df = RFM_final_df.assign(R = r_g.values, F = f_g.values, M = m_g.values)
+    RFM_final_df['sum_val'] = RFM_final_df[['R', 'F', 'M']].sum(axis=1)
+    sns.set(style="whitegrid", font_scale=1.5)
+    
+    st.subheader('4 Cluster test for graphs')
 
 
 # In[ ]:
