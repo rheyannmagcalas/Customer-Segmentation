@@ -19,6 +19,7 @@ from bokeh.io import curdoc
 
 from datetime import date, timedelta
 from PIL import Image
+from streamlit import caching
 
 
 # In[2]:
@@ -164,6 +165,7 @@ elif add_selectbox == 'List of Tools':
 
 
 elif add_selectbox == 'Data Cleaning':
+    caching.clear_cache()
     st.write('')
     st.subheader('Data Cleaning')
     st.write('-----------------------------------------------------------------------') 
@@ -242,6 +244,7 @@ elif add_selectbox == 'Data Cleaning':
 
 
 elif add_selectbox == 'Exploratory Data Analysis':
+    caching.clear_cache()
     st.write('')
     st.subheader('Exploratory Data Analysis')
     st.write('-----------------------------------------------------------------------') 
@@ -595,6 +598,7 @@ elif add_selectbox == 'Exploratory Data Analysis':
 
 
 elif add_selectbox == 'RFM Model':
+    caching.clear_cache()
     st.subheader('RFM Model')
     st.write('-----------------------------------------------------------------------')
     st.write('\n\n1. Recency: How much time has elapsed since a customer’s last activity or transaction with the brand')
@@ -606,6 +610,7 @@ elif add_selectbox == 'RFM Model':
 
 
 elif add_selectbox == "K-Means Clustering and Validation":
+    caching.clear_cache()
     st.write('K-Means Clustering and Validation')
     
     
@@ -615,6 +620,7 @@ elif add_selectbox == "K-Means Clustering and Validation":
 
 
 elif add_selectbox == "Market Basket Analysis":
+    caching.clear_cache()
     st.subheader('Market Basket Analysis')
     st.write('-----------------------------')
     st.markdown('<b>Goal of Market Basket Analysis</b>', unsafe_allow_html=True)
@@ -625,8 +631,7 @@ elif add_selectbox == "Market Basket Analysis":
     st.markdown('<b>Confidence</b>: This says how likely the consequent (item Y) is purchased when antecedent(Item X) is '                'purchased', unsafe_allow_html=True)
     st.markdown('<b>Lift</b>: Likelihood of a customer buying both item X and item Y together', unsafe_allow_html=True)
     
-    st.subheader('Categorizing Sales by Quarter')
-    
+    st.subheader('Quarterly Total Sales')
     quarterly_sales_source = ColumnDataSource(data=dict(column_values=['Q1', 'Q2', 'Q3', 'Q4'], 
                                         column_null_count=[3288, 4075, 4331, 5945], 
                                          color=['#35193e', '#701f57', '#ad1759', '#e13342', '#f37651', '#f6b48f']))
@@ -643,8 +648,125 @@ elif add_selectbox == "Market Basket Analysis":
     quarterly_sales.legend.visible = False
     st.bokeh_chart(quarterly_sales)
     
+    st.subheader('Top 15 Most Bought Products')
+    top_10_products_source = ColumnDataSource(data=dict(column_values=['BAG', 'CAKE', 'T-LIGHT', 'BOTTLE', 'CANDLE', 
+                                                                       'DOILY', 'JAR','HAND WARMER', 'WRAP', 
+                                                                       'BUNTING', 'CLOCK', 'TISSUE',
+                                                                       "PAPER CHAIN KIT 50'S CHRISTMAS ", 
+                                                                       'RABBIT NIGHT LIGHT',
+                                                                       'PAPER CHAIN KIT VINTAGE CHRISTMAS'], 
+                                        column_null_count=[2500, 2294, 1917, 1858, 1392, 1137,  933,  900,  827,  776,  758,
+        705,  678,  495,  479], color=['#35193e', '#701f57', '#ad1759', '#e13342', '#f37651', '#f6b48f']))
+    top_10_products = figure(x_range=['BAG', 'CAKE', 'T-LIGHT', 'BOTTLE', 'CANDLE', 'DOILY', 'JAR',
+       'HAND WARMER', 'WRAP', 'BUNTING', 'CLOCK', 'TISSUE',"PAPER CHAIN KIT 50'S CHRISTMAS ", 'RABBIT NIGHT LIGHT',
+       'PAPER CHAIN KIT VINTAGE CHRISTMAS'], plot_height=500, plot_width=600, 
+                                title='Top 10 Products Categories')
+    
+    top_10_products.vbar(x='column_values', top='column_null_count', width=0.5,
+                            legend_field='column_values', color='color', source=top_10_products_source)
+                                            
+    top_10_products.xaxis.axis_label = 'Products'
+    top_10_products.yaxis.axis_label = 'Total '
+    top_10_products.xaxis.major_label_orientation = 1.2
+    top_10_products.legend.visible = False
+    st.bokeh_chart(top_10_products)
     
     
+    st.subheader('Categorizing Sales by Quarter')
+    
+    
+    q1_top_sales_source = ColumnDataSource(data=dict(column_values=['CAKE', 'BAG', 'T-LIGHT', 'CANDLE', 'BUNTING', 'JAR', 'CLOCK',
+       'WRAP', 'BOTTLE', 'CHALKBOARD', 'TISSUE','SET OF 6 SPICE TINS PANTRY DESIGN', 'SAUCER', 'ORNAMENT',
+       'JAM MAKING SET PRINTED'], 
+                                        column_null_count=[1579, 1321, 1034,  794,  700,  624,  382,  380,  374,  313,  307,
+        275,  272,  240,  240], color=['#35193e', '#701f57', '#ad1759', '#e13342', '#f37651', '#f6b48f']))
+    
+    q1_top_sales = figure(x_range=['CAKE', 'BAG', 'T-LIGHT', 'CANDLE', 'BUNTING', 'JAR', 'CLOCK',
+       'WRAP', 'BOTTLE', 'CHALKBOARD', 'TISSUE','SET OF 6 SPICE TINS PANTRY DESIGN', 'SAUCER', 'ORNAMENT','JAM MAKING SET PRINTED'], plot_height=500, plot_width=600, 
+                                title='Top 10 Products Categories for Q1')
+    
+    q1_top_sales.vbar(x='column_values', top='column_null_count', width=0.5,
+                            legend_field='column_values', color='color', source=q1_top_sales_source)
+                                            
+    q1_top_sales.xaxis.axis_label = 'Product Name'
+    q1_top_sales.yaxis.axis_label = 'Transaction Count'
+    q1_top_sales.xaxis.major_label_orientation = 1.2
+    q1_top_sales.legend.visible = False
+    st.bokeh_chart(q1_top_sales)   
+    
+    
+    q2_top_sales_source = ColumnDataSource(data=dict(column_values=['BAG', 'CAKE', 'T-LIGHT', 'BUNTING', 'JAR', 'CANDLE', 'DOILY',
+       'CLOCK', 'WRAP', 'ORNAMENT', 'SAUCER', 'CHALKBOARD', 'TISSUE','BOTTLE', 'SET OF 4 PANTRY JELLY MOULDS'], 
+                                                     column_null_count=[1870, 1603, 1304, 1186,  843,  789,  479,  440,  411,  332,  325,
+        301,  274,  261,  257], color=['#35193e', '#701f57', '#ad1759', '#e13342', '#f37651', '#f6b48f']))
+    
+    q2_top_sales = figure(x_range=['BAG', 'CAKE', 'T-LIGHT', 'BUNTING', 'JAR', 'CANDLE', 'DOILY',
+       'CLOCK', 'WRAP', 'ORNAMENT', 'SAUCER', 'CHALKBOARD', 'TISSUE',
+       'BOTTLE', 'SET OF 4 PANTRY JELLY MOULDS'], plot_height=500, plot_width=600, 
+                                title='Top 10 Products Categories for Q2')
+    
+    q2_top_sales.vbar(x='column_values', top='column_null_count', width=0.5,
+                            legend_field='column_values', color='color', source=q2_top_sales_source)
+                                            
+    q2_top_sales.xaxis.axis_label = 'Product Name'
+    q2_top_sales.yaxis.axis_label = 'Transaction Count'
+    q2_top_sales.xaxis.major_label_orientation = 1.2
+    q2_top_sales.legend.visible = False
+    st.bokeh_chart(q2_top_sales)   
+    
+    
+    q3_top_sales_source = ColumnDataSource(data=dict(column_values=['BAG', 'CAKE', 'T-LIGHT', 'DOILY', 'BUNTING', 'JAR', 'BOTTLE',
+       'CANDLE', 'WRAP', 'CLOCK', 'TISSUE', 'CASES', 'CHALKBOARD','ORNAMENT', 'POSTAGE'], 
+                                                     column_null_count=[1954, 1835, 1196,  938,  936,  845,  827,  778,  655,  615,  506,
+        473,  340,  329,  271], color=['#35193e', '#701f57', '#ad1759', '#e13342', '#f37651', '#f6b48f']))
+    
+    q3_top_sales = figure(x_range=['BAG', 'CAKE', 'T-LIGHT', 'DOILY', 'BUNTING', 'JAR', 'BOTTLE',
+       'CANDLE', 'WRAP', 'CLOCK', 'TISSUE', 'CASES', 'CHALKBOARD','ORNAMENT', 'POSTAGE'], plot_height=500, 
+                          plot_width=600, title='Top 10 Products Categories for Q3')
+    
+    q3_top_sales.vbar(x='column_values', top='column_null_count', width=0.5,
+                            legend_field='column_values', color='color', source=q3_top_sales_source)
+                                            
+    q3_top_sales.xaxis.axis_label = 'Product Name'
+    q3_top_sales.yaxis.axis_label = 'Transaction Count'
+    q3_top_sales.xaxis.major_label_orientation = 1.2
+    q3_top_sales.legend.visible = False
+    st.bokeh_chart(q3_top_sales)   
+    
+    
+    q4_top_sales_source = ColumnDataSource(data=dict(column_values=['BAG', 'CAKE', 'T-LIGHT', 'BOTTLE', 'CANDLE', 'DOILY', 'JAR',
+       'HAND WARMER', 'WRAP', 'BUNTING', 'CLOCK', 'TISSUE',"PAPER CHAIN KIT 50'S CHRISTMAS ", 'RABBIT NIGHT LIGHT',
+       'PAPER CHAIN KIT VINTAGE CHRISTMAS'], 
+                                        column_null_count=[2500, 2294, 1917, 1858, 1392, 1137,  933,  900,  827,  776,  758,
+        705,  678,  495,  479], color=['#35193e', '#701f57', '#ad1759', '#e13342', '#f37651', '#f6b48f']))
+    
+    q4_top_sales = figure(x_range=['BAG', 'CAKE', 'T-LIGHT', 'BOTTLE', 'CANDLE', 'DOILY', 'JAR',
+       'HAND WARMER', 'WRAP', 'BUNTING', 'CLOCK', 'TISSUE',
+       "PAPER CHAIN KIT 50'S CHRISTMAS ", 'RABBIT NIGHT LIGHT',
+       'PAPER CHAIN KIT VINTAGE CHRISTMAS'], plot_height=500, plot_width=600, 
+                                title='Top 10 Products Categories for Q4')
+    
+    q4_top_sales.vbar(x='column_values', top='column_null_count', width=0.5,
+                            legend_field='column_values', color='color', source=q4_top_sales_source)
+                                            
+    q4_top_sales.xaxis.axis_label = 'Product Name'
+    q4_top_sales.yaxis.axis_label = 'Transaction Count'
+    q4_top_sales.xaxis.major_label_orientation = 1.2
+    q4_top_sales.legend.visible = False
+    st.bokeh_chart(q4_top_sales)        
+        
+    st.subheader('Customers purchase in bulk')
+    st.write('1. 20 Unique Products Per Invoice')
+    st.write('2. £472.8 Average Spend Per Invoice')
+    st.write('Further supports that customers are indeed wholesale customers for gifting/party-related purposes')
+    
+    st.subheader('MBA Results for Top 15 Products')
+    st.write('3.7 Avg Lift')
+    st.write('Customers rarely buy only one item!')
+    
+    st.subheader('Seller can make bundles using the most popular product combinations!')
+    st.write('1. Customers have to decide less and purchase decision will be easier')
+    st.write('2. May increase average spend per invoice')
 
 
 # In[ ]:
