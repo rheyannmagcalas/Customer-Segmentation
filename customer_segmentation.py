@@ -793,7 +793,71 @@ elif add_selectbox == 'RFM Model':
     ax.set_ylabel('Recency')
     plt.colorbar(scatter)
     fig.show()
-    st.pyplot()    
+    st.pyplot() 
+    
+    st.subheader('Validation')
+    st.write('4 Clusters')
+    cluster_4_validation = {
+        'sum_sq':['31724.323542', '2694.064886'],
+        'df':['6.0', '4331.0'],
+        'F':['6.0', 'NaN'],
+        'PR(>F)':[0.0, 'NaN'],
+        'values': ['C(cluster_no)', 'Residual']        
+    }
+
+    st.table(pd.DataFrame(cluster_4_validation).set_index('values'))
+    st.write('7 Clusters')
+    cluster_7_validation = {
+       'sum_sq':['32525.269841','1893.118587'],
+        'df':['6.0', '4331.0'],
+        'F':['12401.665754', 'NaN'],
+        'PR(>F)':[0.0, 'NaN'],
+        'values': ['C(cluster_no)', 'Residual']   
+    }
+    st.table(pd.DataFrame(cluster_7_validation).set_index('values'))
+    
+    st.write('Tukeys’ Test for Cluster Means')
+    st.write('4 Clusters')
+    four_tukeys_validation = {
+        'group1':[0, 0, 0, 0, 0],
+        'group2': [1, 2, 3, 4, 5],
+        'meandiff':[4.6481, 0.9232, 2.3873, -3.5395, 1.8064],
+        'p-adj':[0.001, 0.001, 0.001, 0.001, 0.001],
+        'lower':[4.5363, -1.0359, 2.2731, -3.6596, 1.6783],
+        'upper':[4.7599, -1.0359, 2.5015, -3.6596, 1.9346],
+        'reject':[True, True, True, True, True],
+    }
+    st.write(pd.DataFrame(four_tukeys_validation))
+    st.write('7 Clusters')
+    seven_tukeys_validation = {
+        'group1':[0, 0, 0, 0, 0],
+        'group2': [1, 2, 3, 4, 5],
+        'meandiff':[-2.8089, 5.6166, -1.2236, 4.1979, 3.2664],
+        'p-adj':[0.001, 0.001, 0.001, 0.001, 0.001],
+        'lower':[-2.9527, 5.4646, -1.3562, 4.0573, 3.1188],
+        'upper':[-2.6652, 5.7685, -1.0909, 4.3386, 3.414],
+        'reject':[True, True, True, True, True],
+    }
+    st.write(pd.DataFrame(seven_tukeys_validation))
+    
+    import squarify
+    import matplotlib
+    cmap = matplotlib.cm.tab20
+    mini = 635
+    maxi = 1777
+    norm = matplotlib.colors.Normalize(vmin=mini, vmax=maxi)
+    colors = [cmap(norm(value)) for value in [1777, 1189, 737,635]]
+    fig = plt.gcf()
+    ax = fig.add_subplot()
+    fig.set_size_inches(12, 8)
+    squarify.plot(sizes = [1777, 1189, 737,635], 
+                 label = ['Silver',
+                          'Gold',
+                          'Platinum',
+                          'Bronze'], alpha=1, color = colors)
+    plt.axis('off')
+    plt.show()
+    st.pyplot()
 
 
 # In[ ]:
