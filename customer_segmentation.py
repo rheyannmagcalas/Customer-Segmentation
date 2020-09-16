@@ -866,6 +866,24 @@ elif add_selectbox == 'RFM Model':
 elif add_selectbox == "K-Means Clustering and Validation":
     caching.clear_cache()
     st.write('K-Means Clustering and Validation')
+    df_RFM = pd.read_csv('kmeans.csv')
+    included = ['Recency',
+     'Frequency',
+     'Monetary',
+     'Recency_Activity',
+     'Frequency_Activity',
+     'Monetary_Activity',
+     'TotalQuantity',
+     'UniqueItems',
+     'Percent_Morning',
+     'Percent_weekend',
+     'Percent_1q',
+     'Percent_2q',
+     'Percent_3q']
+    corr = df_RFM[included].corr()
+    plt.figure(figsize=(20, 20))
+    sns.heatmap(corr, annot=True, center=0)  
+    st.pyplot()
     
     
 
