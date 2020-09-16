@@ -41,7 +41,7 @@ add_selectbox = st.sidebar.radio(
     "",
     ("Introduction and Problem Statement", "Data Set", "Outline", "List of Tools", "Data Cleaning", 
      "Exploratory Data Analysis", "RFM Model", "K-Means Clustering and Validation", "Market Basket Analysis", 
-     "Recommendations", "Contributors", "References")
+     "Recommendations", "Contributors")
 )
 
 
@@ -865,7 +865,19 @@ elif add_selectbox == 'RFM Model':
 
 elif add_selectbox == "K-Means Clustering and Validation":
     caching.clear_cache()
-    st.write('K-Means Clustering and Validation')
+    st.subheader('K-Means Clustering and Validation')
+    st.write('1. Feature Engineering')
+    st.write('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a. Feature Extraction')
+    st.write('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b. Feature Transformation')
+    st.write('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c. Correlation Analysis')
+    st.write('2. Best k Validation')
+    st.write('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a. Elbow Method')
+    st.write('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b. Davies-Bouldin')
+    st.write('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c. ANOVA')
+    st.write("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d. Tukey's Test")
+    st.write('3. Clustering: KMeans')
+    st.write('4. Cluster Insights')
+    
     df_RFM = pd.read_csv('kmeans.csv')
     included = ['Recency',
      'Frequency',
@@ -884,6 +896,197 @@ elif add_selectbox == "K-Means Clustering and Validation":
     plt.figure(figsize=(20, 20))
     sns.heatmap(corr, annot=True, center=0)  
     st.pyplot()
+    
+    import math
+    
+    df_RFM['Recency_log'] = df_RFM['Recency'].apply(math.log)
+    df_RFM['Frequency_log'] = df_RFM['Frequency'].apply(math.log)
+    df_RFM['Monetary_log'] = df_RFM['Monetary'].apply(math.log)
+    df_RFM['Recency_Activity_log'] = df_RFM['Recency_Activity'].apply(math.log)
+    df_RFM['Frequency_Activity_log'] = df_RFM['Frequency_Activity'].apply(math.log)
+    df_RFM['Monetary_Activity_log'] = df_RFM['Monetary_Activity'].apply(math.log)
+    df_RFM['TotalQuantity_log'] = df_RFM['TotalQuantity'].apply(math.log)
+    df_RFM['UniqueItems_log'] = df_RFM['UniqueItems'].apply(math.log)
+    
+    st.write('Elbow method')
+    p = figure(plot_width=600, plot_height=300)
+    p.line([2, 3, 4, 5, 6, 7, 8, 9], 
+           [4300,3750,3500, 3100, 3000, 2900, 2700, 2500], line_width=2)
+    st.bokeh_chart(p)
+    st.write('Value: 4')
+    
+    st.write('Davies Bouldin')
+    p = figure(plot_width=600, plot_height=300)
+    p.line([2, 3, 4, 5, 6, 7, 8, 9], 
+           [1.52, 1.75, 1.67, 1.53, 1.54, 1.54, 1.56, 1.20], line_width=2)
+    st.bokeh_chart(p)
+    st.write('Value: 9')
+    
+    
+    st.subheader('ANOVA Testing')
+    st.write('Recency Log')
+    receny_log = {
+        'index': ['C(k5)', 'Residual'],
+        'sum_sq': ['3988.718078', '4910.368045'],
+        'df': ['4.0', '4333.0'],
+        'F': ['879.929736', 'NaN'],
+        'PR(>F)': [0.0, 'NaN']
+    }
+    st.table(pd.DataFrame(receny_log).set_index('index'))
+    st.write('Frequency Log')
+    frequency_log = {
+        'index': ['C(k5)', 'Residual'],
+        'sum_sq': ['5063.062159', '2563.877353'],
+        'df': ['4.0', '4333.0'],
+        'F': ['2139.167101', 'NaN'],
+        'PR(>F)': [0.0, 'NaN']
+    }
+    st.table(pd.DataFrame(frequency_log).set_index('index'))
+    
+    st.write('Monetary Log')
+    monetary_log = {
+        'index': ['C(k5)', 'Residual'],
+        'sum_sq': ['4414.751759', '2480.456567'],
+        'df': ['4.0', '4333.0'],
+        'F': ['1927.983705', 'NaN'],
+        'PR(>F)': [0.0, 'NaN']
+    }
+    st.table(pd.DataFrame(monetary_log).set_index('index'))
+    
+    st.write('Total Quantity Log')
+    total_quantity_log = {
+        'index': ['C(k5)', 'Residual'],
+        'sum_sq': ['4414.751759', '2480.456567'],
+        'df': ['4.0', '4333.0'],
+        'F': ['1927.983705', 'NaN'],
+        'PR(>F)': [0.0, 'NaN']
+    }
+
+    st.table(pd.DataFrame(total_quantity_log).set_index('index'))
+    st.write('Unique Items Log')
+    unique_items_log = {
+        'index': ['C(k5)', 'Residual'],
+        'sum_sq': ['4414.751759', '2480.456567'],
+        'df': ['4.0', '4333.0'],
+        'F': ['1927.983705', 'NaN'],
+        'PR(>F)': [0.0, 'NaN']
+    }
+    st.table(pd.DataFrame(unique_items_log).set_index('index'))
+    
+    st.subheader('Tukey’s Test for Monetary')
+    st.write('Recency k=5')
+    st.write('Recency log')
+    st.write('Multiple Comparison of Means - Tukey HSD, FWER=0.05')
+    
+    recency_tukey_five = {
+        'group1':[0, 0, 0, 0, 1, 1, 1, 2, 2, 2],
+        'group2':[1, 2, 3, 4, 2, 3, 4, 3, 2, 1],
+        'meandiff':[ 1.18711301, -1.45515622, 1.48477916, -0.57042521, -2.64226923 , 0.29766615, -1.75753822, 2.93993538, 0.88473101, -2.05520437], 
+        'p-adj': [0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001],
+        'reject':[True, True, True, True, True, False, True, True, True, True],
+    }
+    
+    st.table(pd.DataFrame(recency_tukey_five))
+    
+    st.write('Frequency log')
+    st.write('Multiple Comparison of Means - Tukey HSD, FWER=0.05')
+    frequency_tukey_five = {
+        'group1':[0, 0, 0, 0, 1, 1, 1, 2, 2, 2],
+        'group2':[1, 2, 3, 4, 2, 3, 4, 3, 2, 1],
+        'meandiff':[0.2739431173084168, 2.8123521210816116, 0.2216542318743091, 1.3875160067857397, 
+                    2.538409003773195, -0.0522888854341077, 1.113572889477323, -2.5906978892073025, 
+                    -1.4248361142958719, 1.1658617749114306], 
+        'p-adj': [0.001, 0.001, 0.001, 0.001, 0.001, 0.8420372600017669, 0.001, 0.001, 0.001, 0.001],
+        'reject':[True, True, True, True, True, False, True, True, True, True],
+    }
+    
+    st.table(pd.DataFrame(frequency_tukey_five))
+    
+    st.write('Monetary log')
+    st.write('Multiple Comparison of Means - Tukey HSD, FWER=0.05')
+    monetary_tukey_five = {
+        'group1':[0, 0, 0, 0, 1, 1, 1, 2, 2, 2],
+        'group2':[1, 2, 3, 4, 2, 3, 4, 3, 2, 1],
+        'meandiff':[0.31169041264284747, 2.65234203393348, 0.32981753181560514, 1.4071102023162316, 2.3406516212906325, 
+                    0.018127119172757666, 1.0954197896733842, -2.322524502117875, -1.2452318316172484, 1.0772926705006265], 
+        'p-adj': [0.001, 0.001, 0.001, 0.001, 0.001, 0.9, 0.001, 0.001, 0.001, 0.001],
+        'reject':[True, True, True, True, True, False, True, True, True, True],
+    }
+    st.table(pd.DataFrame(monetary_tukey_five))
+    
+    st.write('Recency k=4')
+    st.write('Recency log')
+    st.write('Multiple Comparison of Means - Tukey HSD, FWER=0.05')
+    
+    recency_tukey_five = {
+        'group1':[0, 0, 0, 1, 1, 2],
+        'group2':[1, 2, 3, 2, 3, 3],
+        'meandiff':[-2.3305289700840603, -1.3496257607749187, 0.3085075093013998, 0.9809032093091417, 2.63903647938546, 1.6581332700763185],
+        'p-adj': [0.001, 0.001, 0.001, 0.001, 0.001, 0.001],
+        'reject':[True, True, True, True, True, True],
+    }
+    
+    st.table(pd.DataFrame(recency_tukey_five))
+    
+    st.write('Frequency log')
+    st.write('Multiple Comparison of Means - Tukey HSD, FWER=0.05')
+    
+    frequency_tukey_five = {
+        'group1':[0, 0, 0, 0, 1, 1, 1, 2, 2, 3],
+        'group2':[1, 2, 3, 4, 2, 3, 4, 3, 4, 4],
+        'meandiff':[0.2739431173084168, 2.8123521210816116, 0.2216542318743091, 1.3875160067857397, 2.538409003773195, -0.0522888854341077, 
+                    1.113572889477323, -2.5906978892073025, -1.4248361142958719, 1.1658617749114306],
+        'p-adj': [0.001, 0.001, 0.001, 0.001, 0.001, 0.8420372600017669, 0.001, 0.001, 0.001, 0.001],
+        'reject':[True, True, True, True, True, False, True, True, True, True],
+    }
+    
+    st.table(pd.DataFrame(frequency_tukey_five))
+    
+    st.write('Monetary log')
+    st.write('Multiple Comparison of Means - Tukey HSD, FWER=0.05')
+    monetary_tukey_five = {
+        'group1':[0, 0, 0, 0, 1, 1, 1, 2, 2, 3],
+        'group2':[1, 2, 3, 4, 2, 3, 4, 3, 4, 4],
+        'meandiff':[0.31169041264284747, 2.65234203393348, 0.32981753181560514, 1.4071102023162316, 2.3406516212906325, 0.018127119172757666, 
+                    1.0954197896733842, -2.322524502117875, -1.2452318316172484, 1.0772926705006265],
+        'p-adj': [0.001, 0.001, 0.001, 0.001, 0.001, 0.9, 0.001, 0.001, 0.001, 0.001],
+        'reject':[True, True, True, True, True, False, True, True, True, True],
+    }
+    
+    st.table(pd.DataFrame(monetary_tukey_five))
+    
+
+    st.subheader('Cluster Insights')
+    kmeans_cluster_source = ColumnDataSource(data=dict(column_values=[0, 1, 2, 3], 
+                                        column_null_count=[3500, 300000, 3000, 2500], 
+                                         color=['#35193e', '#701f57', '#ad1759', '#e13342', '#f37651', '#f6b48f']))
+    kmeans_cluster = figure(x_range=['Q1', 'Q2', 'Q3', 'Q4'], plot_height=500, plot_width=600, 
+                                title='Cluster Segmentation Distribution')
+    kmeans_cluster.vbar(x='column_values', top='column_null_count', width=0.5,
+                            legend_field='column_values', color='color', source=kmeans_cluster_source)
+                                            
+    kmeans_cluster.xaxis.axis_label = 'Count'
+    kmeans_cluster.yaxis.axis_label = 'Cluster'
+    kmeans_cluster.xaxis.major_label_orientation = 1.2
+    kmeans_cluster.legend.visible = False
+    st.bokeh_chart(kmeans_cluster)
+    
+    
+    kmeans_insights_source = ColumnDataSource(data=dict(column_values=['Percent Afternoon Mean', 'Percent Autumn Mean'], 
+                                        column_null_count=[0.9, 0.7], 
+                                         color=['#35193e', '#701f57', '#ad1759', '#e13342', '#f37651', '#f6b48f']))
+    kmeans_insights = figure(x_range=['Percent Afternoon Mean', 'Percent Autumn Mean'], plot_height=500, plot_width=600, 
+                                title='')
+    kmeans_insights.vbar(x='column_values', top='column_null_count', width=0.5,
+                            legend_field='column_values', color='color', source=kmeans_insights_source)
+                                            
+    kmeans_insights.xaxis.axis_label = 'Features'
+    kmeans_insights.yaxis.axis_label = 'Value'
+    kmeans_insights.xaxis.major_label_orientation = 1.2
+    kmeans_insights.legend.visible = False
+    st.bokeh_chart(kmeans_insights)
+    
+    st.write('For the first cluster, other noticeable similarities are that customers bought '             'during 12NN to 6PM with a mean of 91%, and  they bought during the Autumn season with a mean of 80%.')
     
     
 
