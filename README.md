@@ -1,4 +1,4 @@
-# DS Cohort V Project 1: Customer Segmentation
+# [DS Cohort V Project 1: Customer Segmentation[(https://cohort-5-first-project-cs.herokuapp.com/)
 
 ### Introduction
 An e-commerce company which sells souvenirs wants to segment its customers and determine marketing strategies according to these segments
