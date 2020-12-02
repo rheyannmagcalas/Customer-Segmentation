@@ -1,9 +1,32 @@
 # DS Cohort V Project 1: Customer Segmentation
 
-###Introduction
+### Introduction
 An e-commerce company which sells souvenirs wants to segment its customers and determine marketing strategies according to these segments
 For this purpose, we will define the behavior of customers and we will put the customers into same groups who exhibit common behaviors and then we will try to develop sales and marketing techniques specific to these groups
 
+### Tools
+* Python
+* Jupyter Notebook
+* Regex
+* Seaborn
+* Matplotlib
+* Bokeh
+* Heroku
+* Streamlit
+* Pandas
+* Numpy
+* Scikit Learn
+
+### Algorithms
+* Correlation Analysis
+* Boxplots
+* Elbow Method
+* Davies-Bouldin
+* Silhouette Analysis
+* ANOVA
+* Tukey’s Test
+* RFM Model
+* K-means
 
 ### Contributors:
 * [Alphonso Balagtas](https://www.linkedin.com/in/alphonso-balagtas-0767111a1/)
