@@ -50,5 +50,5 @@ For this purpose, we will define the behavior of customers and we will put the c
 * [Albert Yumol](https://www.linkedin.com/in/albertyumol/)
 * [Elissa Cabal](https://www.linkedin.com/in/elissa-cabal-9790a3141/)
 * [John Barrion](https://www.linkedin.com/in/johnbarrion/)
-* [Julia Camille Las](https://www.linkedin.com/in/julialas/)
+* [Justine Guino](https://www.linkedin.com/in/justinecg/)
 * [Kemp Po](https://www.linkedin.com/in/kemp-po/)
